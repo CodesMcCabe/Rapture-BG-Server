@@ -16,7 +16,7 @@ Users will be able to:
 
 ### Wireframes
 
-![alt text](https://github.com/Roots2D/Rapture-BG)
+![alt text](https://github.com/Roots2D/Rapture-BG/blob/master/assets/wireframe/Rapture%20WireFrames.jpg)
 
 ### Architecture and Technologies
 
