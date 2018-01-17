@@ -10,7 +10,7 @@ Rapture-BG is a 2D arena game inspired by Battle Mode from Super Mario Bros. 3. 
 Users will be able to:
 
 * Move and jump
-* Shoot guns
+* Use weapons
 * View their score as they progress
 * View the current level
 
@@ -23,7 +23,7 @@ Users will be able to:
 This project will be implemented with the following technologies:
 
 * `JavaScript` for game logic
-* `Webpack` to bundle js files
+* `Browserify` to bundle js files
 * `EaselJS` to assist with manipulating and animating graphics
 
 ### Implementation Timeline

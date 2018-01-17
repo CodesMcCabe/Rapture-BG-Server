@@ -1,0 +1,13 @@
+1) render board
+2) render player
+3) player movement
+4) incorporate collision detection
+  - add hit boxes along the way?
+5) render monster
+6) monster movement
+7) weapons
+8) collision detection for bullets
+9) player health
+10) game over on hit
+11) reset game
+12) monster health
