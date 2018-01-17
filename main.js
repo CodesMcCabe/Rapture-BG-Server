@@ -9,17 +9,21 @@ let Monster = require('./monster');
 let Player = require('./player');
 let Weapons = require('./weapons');
 
-document.addEventListener('DOMContentLoaded', () => {
+window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
 
-  let player = new Player(ctx, canvas);
+  const clear = () =>  {
+	   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   };
+
+  let player = new Player(ctx, canvas.width, canvas.height);
   let board = new Board(ctx);
 
   let key;
 
   document.onkeydown = function (evt) {
-   	key = evt.which;
+  	key = evt.which;
   };
 
   document.onkeyup = function(evt) {
@@ -27,15 +31,54 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function main() {
-    window.requestAnimationFrame( main );
+   window.requestAnimationFrame( main );
+   player.update(key);
+   clear();
+   player.render();
 
-    player.update(key);
-    player.clear();
-    player.render();
+
   }
+   main();
+};
 
-  main();
-});
 
-// dont use set interval/timeout
-// request animation frame
+// document.addEventListener('DOMContentLoaded', () => {
+//   let canvas = document.getElementById('canvas');
+//   let ctx = canvas.getContext('2d');
+//
+//
+//
+//   let player = new Player(ctx, canvas);
+//   let board = new Board(ctx);
+//
+//   let key;
+//
+//   document.onkeydown = function (evt) {
+//    	key = evt.which;
+//   };
+//
+//   document.onkeyup = function(evt) {
+//   	key = null;
+//   };
+//
+//   function main() {
+//     window.requestAnimationFrame( main );
+//
+//     player.update(key);
+//     player.clear();
+//     player.render();
+//
+//
+//
+//   }
+//   // bgImage.addEventListener('load', function() {
+//   // }, false);
+//
+//
+//   main();
+//
+//
+// });
+//
+// // dont use set interval/timeout
+// // request animation frame

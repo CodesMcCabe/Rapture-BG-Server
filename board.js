@@ -3,9 +3,13 @@
 // BOARD INSTANCE CAN BE INVOKED UPON GAME START AND PASSED IN A SPECIFIC Board
 // HOW DO I CREATE THE BOARD AND PASS IT IN?
 
+// const board = {
+//   bgImage: new Image()
+//
+// }
 class Board {
   constructor (ctx) {
-    this.board = ctx.fillRect(100, 100, 250, 50);
+    // this.background = new;
     // this.background = backgroundimage;
     // this.board = platforms;
   }

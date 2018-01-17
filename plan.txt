@@ -1,4 +1,4 @@
-1) render board
+1) render board ---> bg css element
 2) render player
 3) player movement
 4) incorporate collision detection

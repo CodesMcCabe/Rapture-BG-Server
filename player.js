@@ -5,56 +5,46 @@ class Player {
   // HOW TO MAKE PLAYER MOVE ON CANVAS???
   // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED, MOVEMENT GOES BACK TO LAST PRESSED KEY IF STILL HELD DOWN
 
-  constructor (ctx, canvas) {
-    this.canvas = canvas;
+  constructor (ctx, canvasW, canvasH) {
     this.ctx = ctx;
+    this.canvasW = canvasW;
+    this.canvasH = canvasH;
     this.coordinates = [0, 0];
-    // this.model = playerModel;
+    this.currentSprite = 'assets/images/player_rifle.png';
   }
 
 
   render() {
-    this.ctx.fillRect(this.coordinates[0], this.coordinates[1], 50, 50);
+    var playerSprite = new Image();
+    playerSprite.src = this.currentSprite;
+    this.ctx.drawImage(playerSprite, this.coordinates[0], this.coordinates[1]);
   }
 
   update(key) {
+    const spriteHeight = 125;
+
     if(key === 37) {
-    	this.coordinates[0]--;
+      this.currentSprite = 'assets/images/player_rifle_left.png';
+      if (this.coordinates[0] !== 0) {this.coordinates[0]-=10;}
     }
     if(key === 38) {
-    	this.coordinates[1]--;
+      this.currentSprite = 'assets/images/player_rifle_up.png';
+      if (this.coordinates[1] !== 0) {this.coordinates[1]-=10;}
     }
     if(key === 39) {
-    	this.coordinates[0]++;
+      this.currentSprite = 'assets/images/player_rifle.png';
+      if (this.coordinates[0] <= (this.canvasW - spriteHeight))
+      {this.coordinates[0]+=10;}
     }
     if(key === 40) {
-    	this.coordinates[1]++;
+      this.currentSprite = 'assets/images/player_rifle_down.png';
+      if (this.coordinates[1] <= (this.canvasH - spriteHeight))
+      {this.coordinates[1]+=10;}
     }
   }
 
-  clear() {
-	   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-   }
+  // CAN ABSTRACT OUT AS NOT PARTICULAR TO CLASS, CLEARS ENTIRE CANVAS
 
-//
-//   update() {
-//     if(key === 37) {
-//     	coordinates[0]--;
-//     }
-//     if(key === 38) {
-//     	coordinates[1]--;
-//     }
-//     if(key === 39) {
-//     	coordinates[0]++;
-//     }
-//     if(key === 40) {
-//     	coordinates[1]++;
-//     }
-// }
-
-  // render () {
-  //   this.model
-  // }
 }
 
 module.exports = Player;
