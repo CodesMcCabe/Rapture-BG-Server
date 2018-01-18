@@ -11,8 +11,8 @@ class Player {
     this.canvasH = canvasH;
     this.coordinates = [0, 0];
     this.currentSprite = 'assets/images/player_rifle.png';
+    this.facingPos = "right";
   }
-
 
   render() {
     var playerSprite = new Image();
@@ -20,24 +20,36 @@ class Player {
     this.ctx.drawImage(playerSprite, this.coordinates[0], this.coordinates[1]);
   }
 
+  currentPosition () {
+    return {
+      playerPos: this.coordinates,
+      playerFace: this.facingPos
+    };
+  }
+
+  //
   update(key) {
     const spriteHeight = 125;
 
     if(key === 37) {
       this.currentSprite = 'assets/images/player_rifle_left.png';
-      if (this.coordinates[0] !== 0) {this.coordinates[0]-=10;}
+      this.facingPos = "left";
+      if (this.coordinates[0] >= 0) {this.coordinates[0]-=10;}
     }
     if(key === 38) {
       this.currentSprite = 'assets/images/player_rifle_up.png';
-      if (this.coordinates[1] !== 0) {this.coordinates[1]-=10;}
+      this.facingPos = "up";
+      if (this.coordinates[1] >= 0) {this.coordinates[1]-=10;}
     }
     if(key === 39) {
       this.currentSprite = 'assets/images/player_rifle.png';
+      this.facingPos = "right";
       if (this.coordinates[0] <= (this.canvasW - spriteHeight))
       {this.coordinates[0]+=10;}
     }
     if(key === 40) {
       this.currentSprite = 'assets/images/player_rifle_down.png';
+      this.facingPos = "down";
       if (this.coordinates[1] <= (this.canvasH - spriteHeight))
       {this.coordinates[1]+=10;}
     }

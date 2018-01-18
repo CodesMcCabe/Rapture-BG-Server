@@ -1,7 +1,7 @@
 1) render board ---> bg css element
-2) render player
-3) player movement
-4) incorporate collision detection
+2) render player - [DONE]
+3) player movement - [DONE]
+4) incorporate collision detection [WALLS DONE]
   - add hit boxes along the way?
 5) render monster
 6) monster movement

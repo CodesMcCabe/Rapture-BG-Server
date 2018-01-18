@@ -8,6 +8,7 @@ let Board = require('./board');
 let Monster = require('./monster');
 let Player = require('./player');
 let Weapons = require('./weapons');
+let Bullet = require('./bullet');
 
 window.onload = function() {
   let canvas = document.getElementById('canvas');
@@ -19,26 +20,61 @@ window.onload = function() {
 
   let player = new Player(ctx, canvas.width, canvas.height);
   let board = new Board(ctx);
-
+  let monster = new Monster(ctx, canvas.width, canvas.height);
   let key;
 
   document.onkeydown = function (evt) {
   	key = evt.which;
+    if (key === 32) {
+      shoot(player.currentPosition());
+    }
   };
 
   document.onkeyup = function(evt) {
   	key = null;
   };
 
+  // RANDOM SLUG MOVEMENT
+  function slugMove () {
+    setInterval(() => monster.update(), 100);
+  }
+
+  let bullets = [];
+  // IF BULLET NOT CREATED YET
+  function shoot (playerPos) {
+    // debugger
+    bullets.push(new Bullet(playerPos, canvas.width,
+      canvas.height, ctx));
+    bullets = bullets.filter(bullet => bullet.active);
+  }
+
+  function update (key) {
+    player.update(key);
+    bullets.forEach(bullet => bullet.update());
+    // if (bullet) {
+    //   bullet.update();
+    // }
+  }
+
+  function render () {
+    player.render();
+    monster.render();
+    bullets.forEach(bullet => bullet.render());
+    // if (bullet) {
+    //   bullet.render();
+    // }
+  }
+
   function main() {
    window.requestAnimationFrame( main );
-   player.update(key);
+   update(key);
    clear();
-   player.render();
-
-
+   render();
   }
+  // debugger
    main();
+   // debugger
+   slugMove();
 };
 
 
