@@ -25,7 +25,7 @@ class Bullet {
   constructor(playerAttr, canvasW, canvasH, ctx) {
     // debugger
     this.active = true;
-    this.coordinates = playerAttr.playerPos;
+    this.coordinates = Object.assign([], playerAttr.playerPos);
     this.playerFace = playerAttr.playerFace;
     this.canvasW = canvasW;
     this.canvasH = canvasH;
@@ -39,36 +39,31 @@ class Bullet {
     this.ctx.drawImage(bulletSprite, this.coordinates[0], this.coordinates[1]);
   }
 
-  update() {
+  update(dt) {
+    // debugger
     if (this.playerFace === "left") {
       this.currentSprite = 'assets/images/bullet_horz.png';
-      if (this.active && this.coordinates[0] >= 0) {
-        this.coordinates[0]-= 2;}
-    } else {
-      this.active = false;
+      // if (this.active && this.coordinates[0] >= 0) {
+      this.coordinates[0]-= (500 * dt);
+      this.active = this.active && this.coordinates[0] >= 0;
     }
 
     if (this.playerFace === "up") {
       this.currentSprite = 'assets/images/bullet_vert.png';
-      if (this.active && this.coordinates[1] >= 0) {this.coordinates[1]-= 2;}
-    } else {
-      this.active = false;
+      this.coordinates[1]-= (500 * dt);
+      this.active = this.active && this.coordinates[1] >= 0;
     }
 
     if (this.playerFace === "right") {
       this.currentSprite = 'assets/images/bullet_horz.png';
-      if( this.active && this.coordinates[0] <= this.canvasW)
-      {this.coordinates[0]+= 2;}
-    } else {
-      this.active = false;
+      this.coordinates[0]+= (500 * dt);
+      this.active = this.active && this.coordinates[0] <= this.canvasW;
     }
 
     if (this.playerFace === "down") {
       this.currentSprite = 'assets/images/bullet_vert.png';
-      if (this.active && this.coordinates[1] <= this.canvasH)
-      {this.coordinates[1]+= 2;}
-    } else {
-      this.active = false;
+      this.coordinates[1]+= (500 * dt);
+      this.active = this.active && this.coordinates[1] <= this.canvasH;
     }
   }
 }
@@ -127,9 +122,9 @@ window.onload = function() {
     bullets = bullets.filter(bullet => bullet.active);
   }
 
-  function update (key) {
+  function update (key, dt) {
     player.update(key);
-    bullets.forEach(bullet => bullet.update());
+    bullets.forEach(bullet => bullet.update(dt));
     // if (bullet) {
     //   bullet.update();
     // }
@@ -144,11 +139,16 @@ window.onload = function() {
     // }
   }
 
+  let lastTime;
   function main() {
-   window.requestAnimationFrame( main );
-   update(key);
-   clear();
-   render();
+    let now = Date.now();
+    let dt = (now - lastTime) / 1000.0;
+    update(key, dt);
+    clear();
+    render();
+
+    lastTime = now;
+    window.requestAnimationFrame( main );
   }
   // debugger
    main();

@@ -48,9 +48,9 @@ window.onload = function() {
     bullets = bullets.filter(bullet => bullet.active);
   }
 
-  function update (key) {
+  function update (key, dt) {
     player.update(key);
-    bullets.forEach(bullet => bullet.update());
+    bullets.forEach(bullet => bullet.update(dt));
     // if (bullet) {
     //   bullet.update();
     // }
@@ -65,11 +65,16 @@ window.onload = function() {
     // }
   }
 
+  let lastTime;
   function main() {
-   window.requestAnimationFrame( main );
-   update(key);
-   clear();
-   render();
+    let now = Date.now();
+    let dt = (now - lastTime) / 1000.0;
+    update(key, dt);
+    clear();
+    render();
+
+    lastTime = now;
+    window.requestAnimationFrame( main );
   }
   // debugger
    main();
