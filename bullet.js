@@ -1,6 +1,6 @@
 class Bullet {
   constructor(playerAttr, canvasW, canvasH, ctx) {
-    // debugger
+    
     this.active = true;
     this.coordinates = Object.assign([], playerAttr.playerPos);
     this.playerFace = playerAttr.playerFace;
@@ -17,10 +17,8 @@ class Bullet {
   }
 
   update(dt) {
-    // debugger
     if (this.playerFace === "left") {
       this.currentSprite = 'assets/images/bullet_horz.png';
-      // if (this.active && this.coordinates[0] >= 0) {
       this.coordinates[0]-= (500 * dt);
       this.active = this.active && this.coordinates[0] >= 0;
     }

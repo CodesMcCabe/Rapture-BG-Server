@@ -1,9 +1,7 @@
 class Player {
-  // player movement
   // player physics
-  // sprite model for player
-  // HOW TO MAKE PLAYER MOVE ON CANVAS???
-  // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED, MOVEMENT GOES BACK TO LAST PRESSED KEY IF STILL HELD DOWN
+  // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED,
+  // MOVEMENT GOES BACK TO LAST PRESSED KEY IF STILL HELD DOWN
 
   constructor (ctx, canvasW, canvasH) {
     this.ctx = ctx;
@@ -27,7 +25,6 @@ class Player {
     };
   }
 
-  //
   update(key) {
     const spriteHeight = 125;
 
@@ -54,8 +51,6 @@ class Player {
       {this.coordinates[1]+=10;}
     }
   }
-
-  // CAN ABSTRACT OUT AS NOT PARTICULAR TO CLASS, CLEARS ENTIRE CANVAS
 
 }
 

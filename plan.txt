@@ -1,13 +1,8 @@
-1) render board ---> bg css element
-2) render player - [DONE]
-3) player movement - [DONE]
-4) incorporate collision detection [WALLS DONE]
-  - add hit boxes along the way?
-5) render monster
-6) monster movement
+1) incorporate BULLET detection
+3) monster health
+4) player health
+5) game over on hit
+6) reset game
+2) monster movement 
+8) animate mo
 7) weapons
-8) collision detection for bullets
-9) player health
-10) game over on hit
-11) reset game
-12) monster health
