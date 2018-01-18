@@ -1,8 +1,9 @@
+- Bullet render correctly
 1) incorporate BULLET detection
 3) monster health
 4) player health
 5) game over on hit
 6) reset game
-2) monster movement 
+2) monster movement
 8) animate mo
 7) weapons

@@ -23,14 +23,17 @@ module.exports = Board;
 },{}],2:[function(require,module,exports){
 class Bullet {
   constructor(playerAttr, canvasW, canvasH, ctx) {
-    // debugger
+
     this.active = true;
-    this.coordinates = Object.assign([], playerAttr.playerPos);
+    this.playerPos = Object.assign([], playerAttr.playerPos);
     this.playerFace = playerAttr.playerFace;
+    this.coordinates = this.setCoordinates(this.playerPos);
     this.canvasW = canvasW;
     this.canvasH = canvasH;
     this.ctx = ctx;
     this.currentSprite = 'assets/images/bullet_horz.png';
+
+    this.setCoordinates = this.setCoordinates.bind(this);
   }
 
   render () {
@@ -39,11 +42,39 @@ class Bullet {
     this.ctx.drawImage(bulletSprite, this.coordinates[0], this.coordinates[1]);
   }
 
+  setCoordinates (playerPos) {
+    let x = playerPos[0];
+    let y = playerPos[1];
+
+    switch (this.playerFace) {
+      case "left":
+        x -= 3;
+        y += 6;
+        return [x, y];
+      case "up":
+        x += 35;
+        y -= 6;
+        return [x, y];
+        // return [playerPos[0], playerPos[1]];
+      case "right":
+        x += 85;
+        y += 34;
+        return [x, y];
+      case "down":
+        x += 6;
+        y += 83;
+        return[x, y];
+      default:
+        return playerPos;
+    }
+
+  }
+
   update(dt) {
-    // debugger
+    // this.setCoordinates(this.playerPos);
+
     if (this.playerFace === "left") {
       this.currentSprite = 'assets/images/bullet_horz.png';
-      // if (this.active && this.coordinates[0] >= 0) {
       this.coordinates[0]-= (500 * dt);
       this.active = this.active && this.coordinates[0] >= 0;
     }
@@ -75,8 +106,6 @@ module.exports = Bullet;
 // CURRENTLY PULLS IN AND RENDERS/MOVES ON CANVAS
 // IS THIS THE BEST PLACE FOR THIS LOGIC? CAN I HOLD ELSEWHERE AND PULL IN?
 // SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
-// WOULD A SINGLE SPACE BE GOOD OR A RUNNER THAT WILL STOP AT CHECKPOINTS TO FIGHT MORE
-// THE PLAYER WOULD HAVE TO DODGE OTHER OBJECTS ALONG THE WAY
 
 let Board = require('./board');
 let Monster = require('./monster');
@@ -114,9 +143,8 @@ window.onload = function() {
   }
 
   let bullets = [];
-  // IF BULLET NOT CREATED YET
+
   function shoot (playerPos) {
-    // debugger
     bullets.push(new Bullet(playerPos, canvas.width,
       canvas.height, ctx));
     bullets = bullets.filter(bullet => bullet.active);
@@ -125,18 +153,12 @@ window.onload = function() {
   function update (key, dt) {
     player.update(key);
     bullets.forEach(bullet => bullet.update(dt));
-    // if (bullet) {
-    //   bullet.update();
-    // }
   }
 
   function render () {
     player.render();
     monster.render();
     bullets.forEach(bullet => bullet.render());
-    // if (bullet) {
-    //   bullet.render();
-    // }
   }
 
   let lastTime;
@@ -150,51 +172,10 @@ window.onload = function() {
     lastTime = now;
     window.requestAnimationFrame( main );
   }
-  // debugger
    main();
-   // debugger
    slugMove();
 };
 
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   let canvas = document.getElementById('canvas');
-//   let ctx = canvas.getContext('2d');
-//
-//
-//
-//   let player = new Player(ctx, canvas);
-//   let board = new Board(ctx);
-//
-//   let key;
-//
-//   document.onkeydown = function (evt) {
-//    	key = evt.which;
-//   };
-//
-//   document.onkeyup = function(evt) {
-//   	key = null;
-//   };
-//
-//   function main() {
-//     window.requestAnimationFrame( main );
-//
-//     player.update(key);
-//     player.clear();
-//     player.render();
-//
-//
-//
-//   }
-//   // bgImage.addEventListener('load', function() {
-//   // }, false);
-//
-//
-//   main();
-//
-//
-// });
-//
 // // dont use set interval/timeout
 // // request animation frame
 
@@ -254,11 +235,9 @@ module.exports = Monster;
 
 },{}],5:[function(require,module,exports){
 class Player {
-  // player movement
   // player physics
-  // sprite model for player
-  // HOW TO MAKE PLAYER MOVE ON CANVAS???
-  // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED, MOVEMENT GOES BACK TO LAST PRESSED KEY IF STILL HELD DOWN
+  // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED,
+  // MOVEMENT GOES BACK TO LAST PRESSED KEY IF STILL HELD DOWN
 
   constructor (ctx, canvasW, canvasH) {
     this.ctx = ctx;
@@ -282,7 +261,6 @@ class Player {
     };
   }
 
-  //
   update(key) {
     const spriteHeight = 125;
 
@@ -309,8 +287,6 @@ class Player {
       {this.coordinates[1]+=10;}
     }
   }
-
-  // CAN ABSTRACT OUT AS NOT PARTICULAR TO CLASS, CLEARS ENTIRE CANVAS
 
 }
 
