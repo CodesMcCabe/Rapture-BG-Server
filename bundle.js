@@ -169,9 +169,9 @@ window.onload = function() {
     bullets.forEach(bullet => {
       bulletX = bullet.coordinates[0];
       bulletY = bullet.coordinates[1];
-      if (bulletX < monsterX + monster.width &&
+      if (bulletX < monsterX + monster.frameWidth &&
         bulletX + bullet.width > monsterX &&
-        bulletY < monsterY + monster.height &&
+        bulletY < monsterY + monster.frameHeight &&
         bulletY + bullet.height > monsterY) {
         monster.reduceHealth(bullet);
         bullets.splice(0, 1);
@@ -262,26 +262,19 @@ class Monster {
     this.canvasW = canvasW;
     this.canvasH = canvasH;
     this.ctx = ctx;
-    this.coordinates = [750, 350];
+    this.coordinates = [700, 300];
     // this.currentSprite = 'assets/images/bossworm_front.png';
     // debugger
     this.currentSprite = 'assets/images/worm_intro.png';
-    this.sprite = 'intro';
+    this.spriteName = 'intro';
     this.frameWidth = 153;
     this.frameHeight = 166;
     this.currentFrame = 0;
     this.shift = 0;
     this.totalFrames = 16;
-    // HITBOX
-    this.height = 106;
-    this.width = 115;
     this.health = 100;
     this.alive = true;
     this.once = true;
-    this.delay = 100;
-    this.lastTime = 0;
-    this.fps = 50;
-    this.acDelta = 0;
 
     this.lastUpdate = Date.now();
   }
@@ -301,27 +294,27 @@ class Monster {
   // }
 
   render(now) {
-    // compare the last time it updated to the frames
-    // if the lastTime is 0 then set it to Date now
-    // then we have something to care to and run the code
-
-    // if it does not meet our criteria we just skip render
-    // console.log(this.lastUpdate - now);
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite;
     this.ctx.drawImage(monsterSprite, this.shift, 0, this.frameWidth,
-      this.frameHeight, 750, 350, this.frameWidth, this.frameHeight);
-
+      this.frameHeight, this.coordinates[0], this.coordinates[1],
+      this.frameWidth, this.frameHeight);
 
     if (now - this.lastUpdate > 80) {
       this.lastUpdate = now;
       this.shift += this.frameWidth + 1;
 
-      if (this.currentFrame === this.totalFrames) {
+      if (this.currentFrame === this.totalFrames &&
+        this.spriteName === 'intro') {
+        this.currentSprite = 'assets/images/worm_idle.png';
+        this.spriteName = 'idle';
+        this.shift = 0;
+        this.currentFrame = 0;
+      } else if (this.currentFrame === this.totalFrames) {
         this.shift = 0;
         this.currentFrame = 0;
       }
-      
+
       this.currentFrame++;
     }
   }
@@ -331,18 +324,6 @@ class Monster {
       this.currentSprite = 'assets/images/boss_die.png';
       return null;
     }
-
-    // if(this.shift !== 0) {
-    //   this.currentFrame++;
-    // }
-
-    // if (this.currentFrame !== 0) {
-    //   if (Date.now() - lastTime > 100) {
-    //     this.currentFrame++;
-    //   }
-    // } else {
-    //   this.currentFrame ++;
-    // }
 
     const keys = [37, 38, 39, 40];
     const random = Math.floor(Math.random() * (keys.length - 1));
@@ -379,22 +360,26 @@ module.exports = Monster;
 },{"./monster_sprites":5,"./sprite":7}],5:[function(require,module,exports){
 const monsterSprites = {
   intro: {
+    url: 'assets/images/worm_intro.png',
+    name: 'intro',
     spriteHeight: 166,
     spriteWidth: 153,
-    rows: 1,
-    cols: 8,
-    width: 153 / 8,
-    height: 166 / 1,
-    curFrame: 0,
+    currentFrame: 0,
     frameCount: 16,
     srcX: 0,
     srcY: 0,
     x: 0,
     y: 0,
+    once: true,
   }
 };
 
 module.export = monsterSprites;
+
+// const devil = {
+//   sprite: new Sprite(()),
+//   monster: new Monster()
+// }
 
 },{}],6:[function(require,module,exports){
 class Player {
@@ -483,21 +468,19 @@ module.exports = Player;
 
 },{}],7:[function(require,module,exports){
 class Sprite {
-  constructor(url, pos, size, speed, frames, dir, once) {
-    this.spriteHeight = options.spriteHeight;
-    this.spriteWidth = options.spriteWidth;
-    this.rows = options.rows;
-    this.cols = options.cols;
-    this.width = options.width;
-    this.height = options.height;
-    this.curFrame =options.curFrame;
-    this.frameCount = options.frameCount;
-    this.srcX = options.srcX;
-    this.srcY = options.srcY;
-    this.x =  options.x;
-    this.y = options.y;
+  constructor(options) {
+    this.url = options.url;
+    this.name = options.name;
+    this.frameWidth = options.frameWidth;
+    this.frameHeight = options.frameHeight;
+    this.currentFrame = options.currentFrame;
+    this.totalFrames = options.frames;
+    this.once = options.once;
+
+    // this.lastUpdate = Date.now();
   }
 }
+// url, name, pos, size, speed, frames, dir, once
 
 module.export = Sprite;
 

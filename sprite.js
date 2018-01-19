@@ -1,18 +1,16 @@
 class Sprite {
-  constructor(url, pos, size, speed, frames, dir, once) {
-    this.spriteHeight = options.spriteHeight;
-    this.spriteWidth = options.spriteWidth;
-    this.rows = options.rows;
-    this.cols = options.cols;
-    this.width = options.width;
-    this.height = options.height;
-    this.curFrame =options.curFrame;
-    this.frameCount = options.frameCount;
-    this.srcX = options.srcX;
-    this.srcY = options.srcY;
-    this.x =  options.x;
-    this.y = options.y;
+  constructor(options) {
+    this.url = options.url;
+    this.name = options.name;
+    this.frameWidth = options.frameWidth;
+    this.frameHeight = options.frameHeight;
+    this.currentFrame = options.currentFrame;
+    this.totalFrames = options.frames;
+    this.once = options.once;
+
+    // this.lastUpdate = Date.now();
   }
 }
+// url, name, pos, size, speed, frames, dir, once
 
 module.export = Sprite;

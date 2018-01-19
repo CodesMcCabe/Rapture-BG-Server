@@ -1,4 +1,4 @@
-1) throttle sprite animation rendering
+1) throttle sprite animation rendering [DONE]
 2) throttle bullet speed
 2) monster movement
 5) game over on hit [WEEKEND]
@@ -16,3 +16,5 @@ frames/second
 
 16/2
 1000/125
+
+for animation

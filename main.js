@@ -33,9 +33,9 @@ window.onload = function() {
     bullets.forEach(bullet => {
       bulletX = bullet.coordinates[0];
       bulletY = bullet.coordinates[1];
-      if (bulletX < monsterX + monster.width &&
+      if (bulletX < monsterX + monster.frameWidth &&
         bulletX + bullet.width > monsterX &&
-        bulletY < monsterY + monster.height &&
+        bulletY < monsterY + monster.frameHeight &&
         bulletY + bullet.height > monsterY) {
         monster.reduceHealth(bullet);
         bullets.splice(0, 1);
