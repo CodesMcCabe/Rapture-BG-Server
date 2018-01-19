@@ -12,10 +12,8 @@ window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
 
-  const clear = () =>  {
-	   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   };
 
+  let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
   let board = new Board(ctx);
   let monster = new Monster(ctx, canvas.width, canvas.height);
@@ -32,12 +30,38 @@ window.onload = function() {
   	key = null;
   };
 
+  function collisionDetected () {
+    let collideBullets = Object.assign([], bullets);
+    let bulletX;
+    let bulletY;
+    let monsterX = monster.coordinates[0];
+    let monsterY = monster.coordinates[1];
+
+    bullets.forEach(bullet => {
+      bulletX = bullet.coordinates[0];
+      bulletY = bullet.coordinates[1];
+      if (bulletX < monsterX + monster.width &&
+        bulletX + bullet.width > monsterX &&
+        bulletY < monsterY + monster.height &&
+        bulletY + bullet.height > monsterY) {
+        monster.reduceHealth(bullet);
+        // alert(`${monster.health}`);
+        bullets.splice(0, 1);
+
+        if (monster.health <= 0) {
+          monster.defeated();
+        }
+      }
+    }
+  );
+    // bullets = collideBullets;
+  }
+
   // RANDOM SLUG MOVEMENT
   function slugMove () {
     setInterval(() => monster.update(), 100);
   }
 
-  let bullets = [];
 
   function shoot (playerPos) {
     bullets.push(new Bullet(playerPos, canvas.width,
@@ -50,6 +74,10 @@ window.onload = function() {
     bullets.forEach(bullet => bullet.update(dt));
   }
 
+  const clear = () =>  {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
   function render () {
     player.render();
     monster.render();
@@ -58,6 +86,7 @@ window.onload = function() {
 
   let lastTime;
   function main() {
+    collisionDetected();
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
     update(key, dt);

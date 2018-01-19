@@ -10,6 +10,19 @@ class Monster {
     this.ctx = ctx;
     this.coordinates = [750, 350];
     this.currentSprite = 'assets/images/bossworm_front.png';
+    // HITBOX
+    this.height = 106;
+    this.width = 115;
+    this.health = 100;
+    this.alive = true;
+  }
+
+  defeated () {
+    this.alive = false;
+  }
+
+  reduceHealth (bullet) {
+    this.health -= bullet.damage;
   }
 
   render() {
@@ -19,6 +32,12 @@ class Monster {
   }
 
   update() {
+    if (!this.alive) {
+      this.currentSprite = 'assets/images/boss_die.png';
+      return null;
+    }
+
+
     const keys = [37, 38, 39, 40];
     const random = Math.floor(Math.random() * (keys.length - 1));
     const key = keys[random];

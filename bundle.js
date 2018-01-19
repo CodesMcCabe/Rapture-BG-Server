@@ -23,7 +23,8 @@ module.exports = Board;
 },{}],2:[function(require,module,exports){
 class Bullet {
   constructor(playerAttr, canvasW, canvasH, ctx) {
-
+    // create bounding box attributes
+    // set heigh and width attributs for each which will simulate the hitbox
     this.active = true;
     this.playerPos = Object.assign([], playerAttr.playerPos);
     this.playerFace = playerAttr.playerFace;
@@ -32,8 +33,15 @@ class Bullet {
     this.canvasH = canvasH;
     this.ctx = ctx;
     this.currentSprite = 'assets/images/bullet_horz.png';
+    this.damage = 10;
+    // USED FOR HITBOX
+    // WILL HAVE TO SWAP DEPENING ON DIRECTION OR JUST USE ELSEWHERE
+    this.height = 6;
+    this.width = 14;
+
 
     this.setCoordinates = this.setCoordinates.bind(this);
+    this.setHitBox = this.setHitBox.bind(this);
   }
 
   render () {
@@ -42,10 +50,33 @@ class Bullet {
     this.ctx.drawImage(bulletSprite, this.coordinates[0], this.coordinates[1]);
   }
 
+  setHitBox (playerFace) {
+    switch (playerFace) {
+      case "left":
+        this.height = 6;
+        this.width = 14;
+        break;
+      case "up":
+        this.height = 14;
+        this.width = 6;
+        break;
+      case "right":
+        this.height = 6;
+        this.width = 14;
+        break;
+      case "down":
+        this.height = 14;
+        this.width = 6;
+        break;
+      default:
+        return playerFace;
+    }
+  }
+
   setCoordinates (playerPos) {
     let x = playerPos[0];
     let y = playerPos[1];
-
+    this.setHitBox(this.playerFace);
     switch (this.playerFace) {
       case "left":
         x -= 3;
@@ -117,10 +148,8 @@ window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
 
-  const clear = () =>  {
-	   ctx.clearRect(0, 0, canvas.width, canvas.height);
-   };
 
+  let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
   let board = new Board(ctx);
   let monster = new Monster(ctx, canvas.width, canvas.height);
@@ -137,12 +166,38 @@ window.onload = function() {
   	key = null;
   };
 
+  function collisionDetected () {
+    let collideBullets = Object.assign([], bullets);
+    let bulletX;
+    let bulletY;
+    let monsterX = monster.coordinates[0];
+    let monsterY = monster.coordinates[1];
+
+    bullets.forEach(bullet => {
+      bulletX = bullet.coordinates[0];
+      bulletY = bullet.coordinates[1];
+      if (bulletX < monsterX + monster.width &&
+        bulletX + bullet.width > monsterX &&
+        bulletY < monsterY + monster.height &&
+        bulletY + bullet.height > monsterY) {
+        monster.reduceHealth(bullet);
+        // alert(`${monster.health}`);
+        bullets.splice(0, 1);
+
+        if (monster.health <= 0) {
+          monster.defeated();
+        }
+      }
+    }
+  );
+    // bullets = collideBullets;
+  }
+
   // RANDOM SLUG MOVEMENT
   function slugMove () {
     setInterval(() => monster.update(), 100);
   }
 
-  let bullets = [];
 
   function shoot (playerPos) {
     bullets.push(new Bullet(playerPos, canvas.width,
@@ -155,6 +210,10 @@ window.onload = function() {
     bullets.forEach(bullet => bullet.update(dt));
   }
 
+  const clear = () =>  {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
   function render () {
     player.render();
     monster.render();
@@ -163,6 +222,7 @@ window.onload = function() {
 
   let lastTime;
   function main() {
+    collisionDetected();
     let now = Date.now();
     let dt = (now - lastTime) / 1000.0;
     update(key, dt);
@@ -192,6 +252,19 @@ class Monster {
     this.ctx = ctx;
     this.coordinates = [750, 350];
     this.currentSprite = 'assets/images/bossworm_front.png';
+    // HITBOX
+    this.height = 106;
+    this.width = 115;
+    this.health = 100;
+    this.alive = true;
+  }
+
+  defeated () {
+    this.alive = false;
+  }
+
+  reduceHealth (bullet) {
+    this.health -= bullet.damage;
   }
 
   render() {
@@ -201,6 +274,12 @@ class Monster {
   }
 
   update() {
+    if (!this.alive) {
+      this.currentSprite = 'assets/images/boss_die.png';
+      return null;
+    }
+
+
     const keys = [37, 38, 39, 40];
     const random = Math.floor(Math.random() * (keys.length - 1));
     const key = keys[random];

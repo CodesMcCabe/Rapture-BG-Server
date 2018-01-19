@@ -1,4 +1,4 @@
-- Bullet render correctly
+- Bullet render correctly [DONE]
 1) incorporate BULLET detection
 3) monster health
 4) player health
