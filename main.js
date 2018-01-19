@@ -3,7 +3,7 @@
 // SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
 
 let Board = require('./board');
-let MonsterSprite = require('./monster_sprites');
+let monsterSprites = require('./monster_sprites');
 let Sprite = require('./sprite');
 let Monster = require('./monster');
 let Player = require('./player');
@@ -18,7 +18,8 @@ window.onload = function() {
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
-  let monster = new Monster(ctx, canvas.width, canvas.height);
+  let monster = new Monster(ctx, canvas.width, canvas.height,
+    new Sprite(monsterSprites.intro));
   let key;
 
   function collisionDetected () {

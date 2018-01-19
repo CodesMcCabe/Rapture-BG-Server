@@ -5,12 +5,11 @@ class Sprite {
     this.frameWidth = options.frameWidth;
     this.frameHeight = options.frameHeight;
     this.currentFrame = options.currentFrame;
-    this.totalFrames = options.frames;
+    this.totalFrames = options.totalFrames;
     this.once = options.once;
-
-    // this.lastUpdate = Date.now();
+    this.fps = options.fps;
   }
 }
 // url, name, pos, size, speed, frames, dir, once
 
-module.export = Sprite;
+module.exports = Sprite;

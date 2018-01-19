@@ -139,7 +139,7 @@ module.exports = Bullet;
 // SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
 
 let Board = require('./board');
-let MonsterSprite = require('./monster_sprites');
+let monsterSprites = require('./monster_sprites');
 let Sprite = require('./sprite');
 let Monster = require('./monster');
 let Player = require('./player');
@@ -154,7 +154,8 @@ window.onload = function() {
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
-  let monster = new Monster(ctx, canvas.width, canvas.height);
+  let monster = new Monster(ctx, canvas.width, canvas.height,
+    new Sprite(monsterSprites.intro));
   let key;
 
   function collisionDetected () {
@@ -255,7 +256,7 @@ let spriteSheet = require('./monster_sprites');
 let Sprite = require('./sprite');
 
 class Monster {
-  constructor (ctx, canvasW, canvasH, options) {
+  constructor (ctx, canvasW, canvasH, sprite) {
     // this.name = options.name;
     // this.power = options.power;
     // this.sprite = options.sprite;
@@ -263,19 +264,10 @@ class Monster {
     this.canvasH = canvasH;
     this.ctx = ctx;
     this.coordinates = [700, 300];
-    // this.currentSprite = 'assets/images/bossworm_front.png';
-    // debugger
-    this.currentSprite = 'assets/images/worm_intro.png';
-    this.spriteName = 'intro';
-    this.frameWidth = 153;
-    this.frameHeight = 166;
-    this.currentFrame = 0;
+    this.currentSprite = sprite;
     this.shift = 0;
-    this.totalFrames = 16;
     this.health = 100;
     this.alive = true;
-    this.once = true;
-
     this.lastUpdate = Date.now();
   }
 
@@ -295,27 +287,30 @@ class Monster {
 
   render(now) {
     var monsterSprite = new Image();
-    monsterSprite.src = this.currentSprite;
-    this.ctx.drawImage(monsterSprite, this.shift, 0, this.frameWidth,
-      this.frameHeight, this.coordinates[0], this.coordinates[1],
-      this.frameWidth, this.frameHeight);
+    monsterSprite.src = this.currentSprite.url;
+    this.ctx.drawImage(monsterSprite, this.shift, 0,
+      this.currentSprite.frameWidth, this.currentSprite.frameHeight,
+      this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
+      this.currentSprite.frameHeight);
 
-    if (now - this.lastUpdate > 80) {
+    if (now - this.lastUpdate > this.currentSprite.fps) {
       this.lastUpdate = now;
-      this.shift += this.frameWidth + 1;
+      this.shift += this.currentSprite.frameWidth + 1;
 
-      if (this.currentFrame === this.totalFrames &&
-        this.spriteName === 'intro') {
-        this.currentSprite = 'assets/images/worm_idle.png';
-        this.spriteName = 'idle';
+      if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
+        this.currentSprite.name === 'intro') {
+        // this.currentSprite = 'assets/images/worm_idle.png';
+        // this.s = 'idle';
         this.shift = 0;
-        this.currentFrame = 0;
-      } else if (this.currentFrame === this.totalFrames) {
+        this.currentSprite.currentFrame = 0;
+      } else if (this.currentSprite.currentFrame ===
+        this.currentSprite.totalFrames) {
+
         this.shift = 0;
-        this.currentFrame = 0;
+        this.currentSprite.currentFrame = 0;
       }
 
-      this.currentFrame++;
+      this.currentSprite.currentFrame++;
     }
   }
 
@@ -330,24 +325,24 @@ class Monster {
     const key = keys[random];
     const spriteHeight = 125;
 
-    if(key === 37) {
-      this.currentSprite = 'assets/images/bossworm_front.png';
-      if (this.coordinates[0] >= 0) {this.coordinates[0]+=10;}
-    }
-    if(key === 38) {
-      this.currentSprite = 'assets/images/bossworm_front.png';
-      if (this.coordinates[1] >= 0) {this.coordinates[1]-=10;}
-    }
-    if(key === 39) {
-      this.currentSprite = 'assets/images/bossworm_front.png';
-      if (this.coordinates[0] <= (this.canvasW - spriteHeight))
-      {this.coordinates[0]-=10;}
-    }
-    if(key === 40) {
-      this.currentSprite = 'assets/images/bossworm_front.png';
-      if (this.coordinates[1] <= (this.canvasH - spriteHeight))
-      {this.coordinates[1]+=10;}
-    }
+    // if(key === 37) {
+    //   this.currentSprite = 'assets/images/bossworm_front.png';
+    //   if (this.coordinates[0] >= 0) {this.coordinates[0]+=10;}
+    // }
+    // if(key === 38) {
+    //   this.currentSprite = 'assets/images/bossworm_front.png';
+    //   if (this.coordinates[1] >= 0) {this.coordinates[1]-=10;}
+    // }
+    // if(key === 39) {
+    //   this.currentSprite = 'assets/images/bossworm_front.png';
+    //   if (this.coordinates[0] <= (this.canvasW - spriteHeight))
+    //   {this.coordinates[0]-=10;}
+    // }
+    // if(key === 40) {
+    //   this.currentSprite = 'assets/images/bossworm_front.png';
+    //   if (this.coordinates[1] <= (this.canvasH - spriteHeight))
+    //   {this.coordinates[1]+=10;}
+    // }
   }
 
   // set new image and then call src on that image path
@@ -362,24 +357,29 @@ const monsterSprites = {
   intro: {
     url: 'assets/images/worm_intro.png',
     name: 'intro',
-    spriteHeight: 166,
-    spriteWidth: 153,
+    frameHeight: 166,
+    frameWidth: 153,
     currentFrame: 0,
-    frameCount: 16,
-    srcX: 0,
-    srcY: 0,
-    x: 0,
-    y: 0,
+    totalFrames: 16,
     once: true,
+    fps: 80,
   }
 };
 
-module.export = monsterSprites;
+module.exports = monsterSprites;
 
 // const devil = {
 //   sprite: new Sprite(()),
 //   monster: new Monster()
 // }
+
+// currentsprite
+// framewidth
+// frameheight
+// totalFrames
+// currentFrame
+// spriteName
+// fps
 
 },{}],6:[function(require,module,exports){
 class Player {
@@ -474,15 +474,14 @@ class Sprite {
     this.frameWidth = options.frameWidth;
     this.frameHeight = options.frameHeight;
     this.currentFrame = options.currentFrame;
-    this.totalFrames = options.frames;
+    this.totalFrames = options.totalFrames;
     this.once = options.once;
-
-    // this.lastUpdate = Date.now();
+    this.fps = options.fps;
   }
 }
 // url, name, pos, size, speed, frames, dir, once
 
-module.export = Sprite;
+module.exports = Sprite;
 
 },{}],8:[function(require,module,exports){
 // HOW TO BUILD PHYSICS FOR A WEAPON?

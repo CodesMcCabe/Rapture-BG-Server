@@ -2,21 +2,26 @@ const monsterSprites = {
   intro: {
     url: 'assets/images/worm_intro.png',
     name: 'intro',
-    spriteHeight: 166,
-    spriteWidth: 153,
+    frameHeight: 166,
+    frameWidth: 153,
     currentFrame: 0,
-    frameCount: 16,
-    srcX: 0,
-    srcY: 0,
-    x: 0,
-    y: 0,
+    totalFrames: 16,
     once: true,
+    fps: 80,
   }
 };
 
-module.export = monsterSprites;
+module.exports = monsterSprites;
 
 // const devil = {
 //   sprite: new Sprite(()),
 //   monster: new Monster()
 // }
+
+// currentsprite
+// framewidth
+// frameheight
+// totalFrames
+// currentFrame
+// spriteName
+// fps
