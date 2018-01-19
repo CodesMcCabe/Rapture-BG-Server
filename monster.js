@@ -30,6 +30,8 @@ class Monster {
     this.lastTime = 0;
     this.fps = 50;
     this.acDelta = 0;
+
+    this.lastUpdate = Date.now();
   }
 
   defeated () {
@@ -46,54 +48,41 @@ class Monster {
   //   }
   // }
 
-  render() {
+  render(now) {
     // compare the last time it updated to the frames
     // if the lastTime is 0 then set it to Date now
     // then we have something to care to and run the code
+
     // if it does not meet our criteria we just skip render
+    // console.log(this.lastUpdate - now);
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite;
-    let now = Date.now();
-    let delta = Date.now() - this.lastTime;
-    // if (this.lastTime === 0) {
-    //   this.lastTime === now;
-    // }
-
-    if (this.acDelta > this.fps) {
-      this.acDelta = 0;
-      this.ctx.drawImage(monsterSprite, this.shift, 0, this.frameWidth,
-        this.frameHeight, 750, 350, this.frameWidth, this.frameHeight);
-        // this.coordinates[0], this.coordinates[1]
-        this.shift += this.frameWidth + 1;
-
-        if (this.currentFrame === this.totalFrames) {
-          this.shift = 0;
-          this.currentFrame = 0;
-          // this.lastTime = 0;
-        } else if (this.currentFrame === this.totalFrames &&
-          this.sprite === 'standard') {
-            // WONT WORK UNTIL SET UP SPRITE CLASS TO ADD TO drawImage
-            this.currentSprite = 'assets/images/bossworm_front.png';
-            this.sprite = 'standard';
-        }
-
-        this.currentFrame++;
+    this.ctx.drawImage(monsterSprite, this.shift, 0, this.frameWidth,
+      this.frameHeight, 750, 350, this.frameWidth, this.frameHeight);
 
 
-    } else {
-      this.acDelta += delta;
+    if (now - this.lastUpdate > 80) {
+      this.lastUpdate = now;
+      this.shift += this.frameWidth + 1;
+
+      if (this.currentFrame === this.totalFrames) {
+        this.shift = 0;
+        this.currentFrame = 0;
+      }
+      
+      this.currentFrame++;
     }
-
-    this.lastTime = Date.now();
-     // && !this.once
-
   }
 
-  update(lastTime) {
+  update(delta) {
     if (!this.alive) {
       this.currentSprite = 'assets/images/boss_die.png';
       return null;
     }
+
+    // if(this.shift !== 0) {
+    //   this.currentFrame++;
+    // }
 
     // if (this.currentFrame !== 0) {
     //   if (Date.now() - lastTime > 100) {

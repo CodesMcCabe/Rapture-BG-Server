@@ -18,8 +18,6 @@ window.onload = function() {
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
-  // let board = new Board(ctx);
-  // let monsterSprite = MonsterSprite.intro;
   let monster = new Monster(ctx, canvas.width, canvas.height);
   let key;
 
@@ -58,21 +56,22 @@ window.onload = function() {
     }
   }
 
-  // RANDOM SLUG MOVEMENT
-  // function slugMove () {
-  //   setInterval(() => monster.update(), 100);
-  // }
-
-
   function shoot (playerPos) {
     bullets.push(new Bullet(playerPos, canvas.width,
       canvas.height, ctx));
     bullets = bullets.filter(bullet => bullet.active);
   }
 
-  function update (key, dt, lastTime) {
+  function update (key, dt, delta) {
     player.update(key);
-    // monster.update(lastTime);
+
+    let fps = 1000/10;
+
+    console.log(delta);
+    if (delta > fps) {
+
+      monster.update();
+    }
     bullets.forEach(bullet => bullet.update(dt));
   }
 
@@ -80,14 +79,13 @@ window.onload = function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
-  function render () {
-    monster.render();
+  function render (now) {
+    monster.render(now);
     player.render();
     bullets.forEach(bullet => bullet.render());
   }
 
-
-  let lastTime;
+  let lastTime = Date.now();
   function main() {
     document.onkeydown = function (evt) {
       key = evt.which;
@@ -100,18 +98,17 @@ window.onload = function() {
     };
 
     collisionDetected();
+
+    window.requestAnimationFrame( main );
+
     let now = Date.now();
-    let dt = (now - lastTime) / 500.0;
-    update(key, dt, lastTime);
+    let delta = now - lastTime;
+    let dt = (delta) / 500.0;
+    update(key, dt, delta);
     clear();
-    render();
+    render(now);
 
     lastTime = now;
-    window.requestAnimationFrame( main );
   }
    main();
-   // slugMove();
 };
-
-// // dont use set interval/timeout
-// // request animation frame

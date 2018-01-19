@@ -7,3 +7,12 @@
 7) weapons
 8) update background
 9) random walls emerge and block paths
+
+- create a sprite class
+- need to track the time difference between each animation frame
+- if the
+
+frames/second
+
+16/2
+1000/125
