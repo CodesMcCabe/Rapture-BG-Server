@@ -3,10 +3,13 @@
 // SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
 
 let Board = require('./board');
+let MonsterSprite = require('./monster_sprites');
+let Sprite = require('./sprite');
 let Monster = require('./monster');
 let Player = require('./player');
 let Weapons = require('./weapons');
 let Bullet = require('./bullet');
+
 
 window.onload = function() {
   let canvas = document.getElementById('canvas');
@@ -15,25 +18,17 @@ window.onload = function() {
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
-  let board = new Board(ctx);
+  // let board = new Board(ctx);
+  // let monsterSprite = MonsterSprite.intro;
   let monster = new Monster(ctx, canvas.width, canvas.height);
   let key;
-
-  document.onkeydown = function (evt) {
-  	key = evt.which;
-    if (key === 32) {
-      shoot(player.currentPosition());
-    }
-  };
-
-  document.onkeyup = function(evt) {
-  	key = null;
-  };
 
   function collisionDetected () {
     let collideBullets = Object.assign([], bullets);
     let bulletX;
     let bulletY;
+    let playerX = player.coordinates[0];
+    let playerY = player.coordinates[1];
     let monsterX = monster.coordinates[0];
     let monsterY = monster.coordinates[1];
 
@@ -45,7 +40,6 @@ window.onload = function() {
         bulletY < monsterY + monster.height &&
         bulletY + bullet.height > monsterY) {
         monster.reduceHealth(bullet);
-        // alert(`${monster.health}`);
         bullets.splice(0, 1);
 
         if (monster.health <= 0) {
@@ -54,13 +48,20 @@ window.onload = function() {
       }
     }
   );
-    // bullets = collideBullets;
+
+  if (playerX < monsterX + monster.width &&
+    playerX + player.width > monsterX &&
+    playerY < monsterY + monster.height &&
+    playerY + player.height > monsterY &&
+    monster.alive) {
+      alert('Game Over!');
+    }
   }
 
   // RANDOM SLUG MOVEMENT
-  function slugMove () {
-    setInterval(() => monster.update(), 100);
-  }
+  // function slugMove () {
+  //   setInterval(() => monster.update(), 100);
+  // }
 
 
   function shoot (playerPos) {
@@ -69,8 +70,9 @@ window.onload = function() {
     bullets = bullets.filter(bullet => bullet.active);
   }
 
-  function update (key, dt) {
+  function update (key, dt, lastTime) {
     player.update(key);
+    // monster.update(lastTime);
     bullets.forEach(bullet => bullet.update(dt));
   }
 
@@ -79,17 +81,28 @@ window.onload = function() {
   };
 
   function render () {
-    player.render();
     monster.render();
+    player.render();
     bullets.forEach(bullet => bullet.render());
   }
 
+
   let lastTime;
   function main() {
+    document.onkeydown = function (evt) {
+      key = evt.which;
+      if (key === 32) {
+        shoot(player.currentPosition());
+      }
+    };
+    document.onkeyup = function(evt) {
+      key = null;
+    };
+
     collisionDetected();
     let now = Date.now();
-    let dt = (now - lastTime) / 1000.0;
-    update(key, dt);
+    let dt = (now - lastTime) / 500.0;
+    update(key, dt, lastTime);
     clear();
     render();
 
@@ -97,7 +110,7 @@ window.onload = function() {
     window.requestAnimationFrame( main );
   }
    main();
-   slugMove();
+   // slugMove();
 };
 
 // // dont use set interval/timeout

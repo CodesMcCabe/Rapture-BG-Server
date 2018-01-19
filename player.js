@@ -10,12 +10,37 @@ class Player {
     this.coordinates = [0, 0];
     this.currentSprite = 'assets/images/player_rifle.png';
     this.facingPos = "right";
+    this.height = 40;
+    this.width = 80;
   }
 
   render() {
     var playerSprite = new Image();
     playerSprite.src = this.currentSprite;
     this.ctx.drawImage(playerSprite, this.coordinates[0], this.coordinates[1]);
+  }
+
+  setHitBox (facingPos) {
+    switch (facingPos) {
+      case "left":
+        this.height = 40;
+        this.width = 80;
+        break;
+      case "up":
+        this.height = 80;
+        this.width = 40;
+        break;
+      case "right":
+        this.height = 40;
+        this.width = 80;
+        break;
+      case "down":
+        this.height = 80;
+        this.width = 40;
+        break;
+      default:
+        return facingPos;
+    }
   }
 
   currentPosition () {
@@ -27,27 +52,28 @@ class Player {
 
   update(key) {
     const spriteHeight = 125;
+    this.setHitBox(this.facingPos);
 
     if(key === 37) {
       this.currentSprite = 'assets/images/player_rifle_left.png';
       this.facingPos = "left";
-      if (this.coordinates[0] >= 0) {this.coordinates[0]-=10;}
+      if (this.coordinates[0] >= 5) {this.coordinates[0]-=10;}
     }
     if(key === 38) {
       this.currentSprite = 'assets/images/player_rifle_up.png';
       this.facingPos = "up";
-      if (this.coordinates[1] >= 0) {this.coordinates[1]-=10;}
+      if (this.coordinates[1] >= 15) {this.coordinates[1]-=10;}
     }
     if(key === 39) {
       this.currentSprite = 'assets/images/player_rifle.png';
       this.facingPos = "right";
-      if (this.coordinates[0] <= (this.canvasW - spriteHeight))
+      if (this.coordinates[0] <= (this.canvasW - this.height - 30))
       {this.coordinates[0]+=10;}
     }
     if(key === 40) {
       this.currentSprite = 'assets/images/player_rifle_down.png';
       this.facingPos = "down";
-      if (this.coordinates[1] <= (this.canvasH - spriteHeight))
+      if (this.coordinates[1] <= (this.canvasH - this.height))
       {this.coordinates[1]+=10;}
     }
   }

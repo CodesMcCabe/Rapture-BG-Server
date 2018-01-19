@@ -1,9 +1,9 @@
-- Bullet render correctly [DONE]
-1) incorporate BULLET detection
-3) monster health
-4) player health
-5) game over on hit
-6) reset game
+1) throttle sprite animation rendering
+2) throttle bullet speed
 2) monster movement
+5) game over on hit [WEEKEND]
+6) reset game
 8) animate mo
 7) weapons
+8) update background
+9) random walls emerge and block paths

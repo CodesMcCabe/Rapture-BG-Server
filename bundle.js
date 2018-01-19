@@ -79,21 +79,21 @@ class Bullet {
     this.setHitBox(this.playerFace);
     switch (this.playerFace) {
       case "left":
-        x -= 3;
-        y += 6;
+        x += 4;
+        y += 11;
         return [x, y];
       case "up":
-        x += 35;
-        y -= 6;
+        x += 40;
+        y += 5;
         return [x, y];
         // return [playerPos[0], playerPos[1]];
       case "right":
-        x += 85;
-        y += 34;
+        x += 75;
+        y += 40;
         return [x, y];
       case "down":
-        x += 6;
-        y += 83;
+        x += 11;
+        y += 80;
         return[x, y];
       default:
         return playerPos;
@@ -139,10 +139,13 @@ module.exports = Bullet;
 // SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
 
 let Board = require('./board');
+let MonsterSprite = require('./monster_sprites');
+let Sprite = require('./sprite');
 let Monster = require('./monster');
 let Player = require('./player');
 let Weapons = require('./weapons');
 let Bullet = require('./bullet');
+
 
 window.onload = function() {
   let canvas = document.getElementById('canvas');
@@ -151,25 +154,17 @@ window.onload = function() {
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
-  let board = new Board(ctx);
+  // let board = new Board(ctx);
+  // let monsterSprite = MonsterSprite.intro;
   let monster = new Monster(ctx, canvas.width, canvas.height);
   let key;
-
-  document.onkeydown = function (evt) {
-  	key = evt.which;
-    if (key === 32) {
-      shoot(player.currentPosition());
-    }
-  };
-
-  document.onkeyup = function(evt) {
-  	key = null;
-  };
 
   function collisionDetected () {
     let collideBullets = Object.assign([], bullets);
     let bulletX;
     let bulletY;
+    let playerX = player.coordinates[0];
+    let playerY = player.coordinates[1];
     let monsterX = monster.coordinates[0];
     let monsterY = monster.coordinates[1];
 
@@ -181,7 +176,6 @@ window.onload = function() {
         bulletY < monsterY + monster.height &&
         bulletY + bullet.height > monsterY) {
         monster.reduceHealth(bullet);
-        // alert(`${monster.health}`);
         bullets.splice(0, 1);
 
         if (monster.health <= 0) {
@@ -190,13 +184,20 @@ window.onload = function() {
       }
     }
   );
-    // bullets = collideBullets;
+
+  if (playerX < monsterX + monster.width &&
+    playerX + player.width > monsterX &&
+    playerY < monsterY + monster.height &&
+    playerY + player.height > monsterY &&
+    monster.alive) {
+      alert('Game Over!');
+    }
   }
 
   // RANDOM SLUG MOVEMENT
-  function slugMove () {
-    setInterval(() => monster.update(), 100);
-  }
+  // function slugMove () {
+  //   setInterval(() => monster.update(), 100);
+  // }
 
 
   function shoot (playerPos) {
@@ -205,8 +206,9 @@ window.onload = function() {
     bullets = bullets.filter(bullet => bullet.active);
   }
 
-  function update (key, dt) {
+  function update (key, dt, lastTime) {
     player.update(key);
+    // monster.update(lastTime);
     bullets.forEach(bullet => bullet.update(dt));
   }
 
@@ -215,17 +217,28 @@ window.onload = function() {
   };
 
   function render () {
-    player.render();
     monster.render();
+    player.render();
     bullets.forEach(bullet => bullet.render());
   }
 
+
   let lastTime;
   function main() {
+    document.onkeydown = function (evt) {
+      key = evt.which;
+      if (key === 32) {
+        shoot(player.currentPosition());
+      }
+    };
+    document.onkeyup = function(evt) {
+      key = null;
+    };
+
     collisionDetected();
     let now = Date.now();
-    let dt = (now - lastTime) / 1000.0;
-    update(key, dt);
+    let dt = (now - lastTime) / 500.0;
+    update(key, dt, lastTime);
     clear();
     render();
 
@@ -233,14 +246,16 @@ window.onload = function() {
     window.requestAnimationFrame( main );
   }
    main();
-   slugMove();
+   // slugMove();
 };
 
 // // dont use set interval/timeout
 // // request animation frame
 
-},{"./board":1,"./bullet":2,"./monster":4,"./player":5,"./weapons":6}],4:[function(require,module,exports){
+},{"./board":1,"./bullet":2,"./monster":4,"./monster_sprites":5,"./player":6,"./sprite":7,"./weapons":8}],4:[function(require,module,exports){
 // MONSTER WILL CHASE PLAYER, TAKE SHORTEST ROUTE IF POSSIBLE
+let spriteSheet = require('./monster_sprites');
+let Sprite = require('./sprite');
 
 class Monster {
   constructor (ctx, canvasW, canvasH, options) {
@@ -251,12 +266,25 @@ class Monster {
     this.canvasH = canvasH;
     this.ctx = ctx;
     this.coordinates = [750, 350];
-    this.currentSprite = 'assets/images/bossworm_front.png';
+    // this.currentSprite = 'assets/images/bossworm_front.png';
+    // debugger
+    this.currentSprite = 'assets/images/worm_intro.png';
+    this.sprite = 'intro';
+    this.frameWidth = 153;
+    this.frameHeight = 166;
+    this.currentFrame = 0;
+    this.shift = 0;
+    this.totalFrames = 16;
     // HITBOX
     this.height = 106;
     this.width = 115;
     this.health = 100;
     this.alive = true;
+    this.once = true;
+    this.delay = 100;
+    this.lastTime = 0;
+    this.fps = 50;
+    this.acDelta = 0;
   }
 
   defeated () {
@@ -267,18 +295,68 @@ class Monster {
     this.health -= bullet.damage;
   }
 
+  // createSprite(sprite) {
+  //   if (sprite !== this.currentSprite) {
+  //     this.currentSprite = new Sprite(sprite);
+  //   }
+  // }
+
   render() {
+    // compare the last time it updated to the frames
+    // if the lastTime is 0 then set it to Date now
+    // then we have something to care to and run the code
+    // if it does not meet our criteria we just skip render
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite;
-    this.ctx.drawImage(monsterSprite, this.coordinates[0], this.coordinates[1]);
+    let now = Date.now();
+    let delta = Date.now() - this.lastTime;
+    // if (this.lastTime === 0) {
+    //   this.lastTime === now;
+    // }
+
+    if (this.acDelta > this.fps) {
+      this.acDelta = 0;
+      this.ctx.drawImage(monsterSprite, this.shift, 0, this.frameWidth,
+        this.frameHeight, 750, 350, this.frameWidth, this.frameHeight);
+        // this.coordinates[0], this.coordinates[1]
+        this.shift += this.frameWidth + 1;
+
+        if (this.currentFrame === this.totalFrames) {
+          this.shift = 0;
+          this.currentFrame = 0;
+          // this.lastTime = 0;
+        } else if (this.currentFrame === this.totalFrames &&
+          this.sprite === 'standard') {
+            // WONT WORK UNTIL SET UP SPRITE CLASS TO ADD TO drawImage
+            this.currentSprite = 'assets/images/bossworm_front.png';
+            this.sprite = 'standard';
+        }
+
+        this.currentFrame++;
+
+
+    } else {
+      this.acDelta += delta;
+    }
+
+    this.lastTime = Date.now();
+     // && !this.once
+
   }
 
-  update() {
+  update(lastTime) {
     if (!this.alive) {
       this.currentSprite = 'assets/images/boss_die.png';
       return null;
     }
 
+    // if (this.currentFrame !== 0) {
+    //   if (Date.now() - lastTime > 100) {
+    //     this.currentFrame++;
+    //   }
+    // } else {
+    //   this.currentFrame ++;
+    // }
 
     const keys = [37, 38, 39, 40];
     const random = Math.floor(Math.random() * (keys.length - 1));
@@ -312,7 +390,27 @@ class Monster {
 
 module.exports = Monster;
 
-},{}],5:[function(require,module,exports){
+},{"./monster_sprites":5,"./sprite":7}],5:[function(require,module,exports){
+const monsterSprites = {
+  intro: {
+    spriteHeight: 166,
+    spriteWidth: 153,
+    rows: 1,
+    cols: 8,
+    width: 153 / 8,
+    height: 166 / 1,
+    curFrame: 0,
+    frameCount: 16,
+    srcX: 0,
+    srcY: 0,
+    x: 0,
+    y: 0,
+  }
+};
+
+module.export = monsterSprites;
+
+},{}],6:[function(require,module,exports){
 class Player {
   // player physics
   // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED,
@@ -325,12 +423,37 @@ class Player {
     this.coordinates = [0, 0];
     this.currentSprite = 'assets/images/player_rifle.png';
     this.facingPos = "right";
+    this.height = 40;
+    this.width = 80;
   }
 
   render() {
     var playerSprite = new Image();
     playerSprite.src = this.currentSprite;
     this.ctx.drawImage(playerSprite, this.coordinates[0], this.coordinates[1]);
+  }
+
+  setHitBox (facingPos) {
+    switch (facingPos) {
+      case "left":
+        this.height = 40;
+        this.width = 80;
+        break;
+      case "up":
+        this.height = 80;
+        this.width = 40;
+        break;
+      case "right":
+        this.height = 40;
+        this.width = 80;
+        break;
+      case "down":
+        this.height = 80;
+        this.width = 40;
+        break;
+      default:
+        return facingPos;
+    }
   }
 
   currentPosition () {
@@ -342,27 +465,28 @@ class Player {
 
   update(key) {
     const spriteHeight = 125;
+    this.setHitBox(this.facingPos);
 
     if(key === 37) {
       this.currentSprite = 'assets/images/player_rifle_left.png';
       this.facingPos = "left";
-      if (this.coordinates[0] >= 0) {this.coordinates[0]-=10;}
+      if (this.coordinates[0] >= 5) {this.coordinates[0]-=10;}
     }
     if(key === 38) {
       this.currentSprite = 'assets/images/player_rifle_up.png';
       this.facingPos = "up";
-      if (this.coordinates[1] >= 0) {this.coordinates[1]-=10;}
+      if (this.coordinates[1] >= 15) {this.coordinates[1]-=10;}
     }
     if(key === 39) {
       this.currentSprite = 'assets/images/player_rifle.png';
       this.facingPos = "right";
-      if (this.coordinates[0] <= (this.canvasW - spriteHeight))
+      if (this.coordinates[0] <= (this.canvasW - this.height - 30))
       {this.coordinates[0]+=10;}
     }
     if(key === 40) {
       this.currentSprite = 'assets/images/player_rifle_down.png';
       this.facingPos = "down";
-      if (this.coordinates[1] <= (this.canvasH - spriteHeight))
+      if (this.coordinates[1] <= (this.canvasH - this.height))
       {this.coordinates[1]+=10;}
     }
   }
@@ -371,7 +495,27 @@ class Player {
 
 module.exports = Player;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
+class Sprite {
+  constructor(url, pos, size, speed, frames, dir, once) {
+    this.spriteHeight = options.spriteHeight;
+    this.spriteWidth = options.spriteWidth;
+    this.rows = options.rows;
+    this.cols = options.cols;
+    this.width = options.width;
+    this.height = options.height;
+    this.curFrame =options.curFrame;
+    this.frameCount = options.frameCount;
+    this.srcX = options.srcX;
+    this.srcY = options.srcY;
+    this.x =  options.x;
+    this.y = options.y;
+  }
+}
+
+module.export = Sprite;
+
+},{}],8:[function(require,module,exports){
 // HOW TO BUILD PHYSICS FOR A WEAPON?
 // BULLET SPEED, SPREAD, DAMAGE?
 // DO PHYSICS NEED TO BE A SEPARATE CLASS? CAN I IMPORT A LIBRARY TO HANDLE THAT LOGIC?

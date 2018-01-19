@@ -56,21 +56,21 @@ class Bullet {
     this.setHitBox(this.playerFace);
     switch (this.playerFace) {
       case "left":
-        x -= 3;
-        y += 6;
+        x += 4;
+        y += 11;
         return [x, y];
       case "up":
-        x += 35;
-        y -= 6;
+        x += 40;
+        y += 5;
         return [x, y];
         // return [playerPos[0], playerPos[1]];
       case "right":
-        x += 85;
-        y += 34;
+        x += 75;
+        y += 40;
         return [x, y];
       case "down":
-        x += 6;
-        y += 83;
+        x += 11;
+        y += 80;
         return[x, y];
       default:
         return playerPos;
