@@ -295,6 +295,7 @@ class Monster {
     monsterSprite.src = this.currentSprite.url;
     // this.coordinates[0] = Math.floor(this.coordinates[0]);
     // this.coordinates[1] = Math.floor(this.coordinates[1]);
+    // debugger
     this.ctx.drawImage(monsterSprite, this.shift, 0,
       this.currentSprite.frameWidth, this.currentSprite.frameHeight,
       this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
@@ -304,10 +305,11 @@ class Monster {
     if (now - this.lastUpdate > fps && !this.gameOver)  {
       this.currentSprite.fps = fps;
       this.lastUpdate = now;
-      this.shift += this.currentSprite.frameWidth + 1;
+      this.shift = this.currentSprite.currentFrame * this.currentSprite.frameWidth;
       // debugger
       if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
         this.currentSprite.name === 'intro') {
+          // debugger
       // if (this.currentSprite.currentFrame === this.currentSprite.totalFrames - 2) {
           // th
         // debugger
