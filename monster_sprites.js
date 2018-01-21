@@ -10,7 +10,7 @@ const monsterSpriteSheet = {
     totalFrames: 16,
     once: true,
     fps: 250,
-    fpsX: .92,
+    fpsX: 1,
   },
 
   idle: {

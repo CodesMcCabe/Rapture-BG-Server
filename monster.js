@@ -161,10 +161,9 @@ class Monster {
       return null;
     }
     if (this.targetPos.length === 0) {
-      // setTimeout(() => {
+      setTimeout(() => {
           this.targetPos = Object.assign([], playerPos);
-
-      // }, 2000);
+      }, 3000);
   }
 
     this.counter = this.counter || 0;
