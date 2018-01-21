@@ -272,6 +272,7 @@ class Monster {
     this.targetPos = [];
     this.interval = null;
     this.counter = 0;
+    this.finalPlayerPos = [];
   }
 
   defeated () {
@@ -348,8 +349,7 @@ class Monster {
   }
 
   chasePlayer (playerPos, delta) {
-    // debugger
-      let playerDir = this.findDirectionVector(playerPos);
+      let playerDir = this.findDirectionVector(this.finalPlayerPos);
       let magnitude = this.findMagnitude(playerDir[0], playerDir[1]);
       let normalized = this.normalizeVector(playerDir, magnitude);
       let velocity = 1;
@@ -375,35 +375,41 @@ class Monster {
 
   handleBiteWest (delta) {
     // use chase logic and reset sprite to idle when position reached
+    if (this.finalPlayerPos.length === 0) {
+      this.finalPlayerPos = Object.assign([], this.targetPos);
+    }
     // debugger
     if (
-      this.coordinates[0] <= this.targetPos[0] +50){
+      this.coordinates[0] <= this.finalPlayerPos[0] +50){
         // debugger
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
-      this.coordinates = [this.targetPos[0] + 10, this.targetPos[1]];
-
+      this.coordinates = [this.finalPlayerPos[0] + 10, this.finalPlayerPos[1]];
+      this.finalPlayerPos = [];
       this.targetPos = [];
       // this.reachedTarget = false;
-    } else if (this.coordinates[0] >= this.targetPos[0]) {
-
-      this.chasePlayer(this.targetPos, delta);
+    } else if (this.coordinates[0] >= this.finalPlayerPos[0]) {
+      window.clearInterval(this.interval);
+      this.chasePlayer(this.finalPlayerPos, delta);
       // this.reachedTarget = false;
     }
   }
 
   handleBiteEast (delta) {
+    if (this.finalPlayerPos.length === 0) {
+      this.finalPlayerPos = Object.assign([], this.targetPos);
+    }
 
-    if (this.coordinates[0] >= this.targetPos[0] -50){
+    if (this.coordinates[0] >= this.finalPlayerPos[0] -50){
         // debugger
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
-      this.coordinates = [this.targetPos[0] -10, this.targetPos[1]];
-      // debugger
+      this.coordinates = [this.finalPlayerPos[0] -10, this.finalPlayerPos[1]];
+      this.finalPlayerPos = [];
       this.targetPos = [];
-    } else if (this.coordinates[0] <= this.targetPos[0]) {
+    } else if (this.coordinates[0] <= this.finalPlayerPos[0]) {
       // debugger
-      this.chasePlayer(this.targetPos, delta);
+      this.chasePlayer(this.finalPlayerPos, delta);
     }
   }
 
@@ -414,9 +420,9 @@ class Monster {
       return null;
     }
     if (this.targetPos.length === 0) {
-      setTimeout(() => {
+      this.interval = setInterval(() => {
           this.targetPos = Object.assign([], playerPos);
-      }, 3000);
+      }, 1000);
   }
 
     this.counter = this.counter || 0;
