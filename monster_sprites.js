@@ -71,16 +71,3 @@ const monsterSprites = {
 };
 
 module.exports = monsterSprites;
-
-// const devil = {
-//   sprite: new Sprite(()),
-//   monster: new Monster()
-// }
-
-// currentsprite
-// framewidth
-// frameheight
-// totalFrames
-// currentFrame
-// spriteName
-// fps

@@ -134,10 +134,6 @@ class Bullet {
 module.exports = Bullet;
 
 },{}],3:[function(require,module,exports){
-// CURRENTLY PULLS IN AND RENDERS/MOVES ON CANVAS
-// IS THIS THE BEST PLACE FOR THIS LOGIC? CAN I HOLD ELSEWHERE AND PULL IN?
-// SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
-
 let Board = require('./board');
 let monsterSprites = require('./monster_sprites');
 let Sprite = require('./sprite');
@@ -146,18 +142,15 @@ let Player = require('./player');
 let Weapons = require('./weapons');
 let Bullet = require('./bullet');
 
-
-
-
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
-
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
   let monster = new Monster(ctx, canvas.width, canvas.height,
     monsterSprites.intro);
+  let lastTime = Date.now();
   let key;
 
   function collisionDetected () {
@@ -202,7 +195,6 @@ window.onload = function() {
   }
 
   function update (key, dt, delta) {
-    // debugger
     player.update(key);
     monster.update(player.coordinates, dt, delta);
     bullets.forEach(bullet => bullet.update(dt));
@@ -224,25 +216,20 @@ window.onload = function() {
       shoot(player.currentPosition());
     }
   };
+
   document.onkeyup = function(evt) {
     key = null;
   };
 
-  let lastTime = Date.now();
   function main() {
-
-    collisionDetected();
-
-    window.requestAnimationFrame( main );
-
     let now = Date.now();
     let delta = now - lastTime;
     let dt = (delta) / 500.0;
+    window.requestAnimationFrame( main );
+    collisionDetected();
     update(key, dt, delta);
     clear();
-
     render(now);
-
     lastTime = now;
   }
   requestAnimationFrame( main );
@@ -283,57 +270,39 @@ class Monster {
     this.health -= bullet.damage;
   }
 
-
-  // createSprite(sprite) {
-  //   if (sprite !== this.currentSprite) {
-  //     this.currentSprite = new Sprite(sprite);
-  //   }
-  // }
-
   render(now) {
-    // this.currentSprite.currentFrame = 0;
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite.url;
-    // this.coordinates[0] = Math.floor(this.coordinates[0]);
-    // this.coordinates[1] = Math.floor(this.coordinates[1]);
-    // debugger
     this.ctx.drawImage(monsterSprite, this.shift, 0,
       this.currentSprite.frameWidth, this.currentSprite.frameHeight,
       this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
       this.currentSprite.frameHeight);
-        // debugger
+
     let fps = this.currentSprite.fps * this.currentSprite.fpsX;
     if (now - this.lastUpdate > fps && !this.gameOver)  {
       this.currentSprite.fps = fps;
       this.lastUpdate = now;
-      this.shift = this.currentSprite.currentFrame * this.currentSprite.frameWidth;
-      // debugger
+      this.shift = this.currentSprite.currentFrame *
+      this.currentSprite.frameWidth;
+
       if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
         this.currentSprite.name === 'intro') {
-          // debugger
-      // if (this.currentSprite.currentFrame === this.currentSprite.totalFrames - 2) {
-          // th
-        // debugger
+
         this.coordinates = [this.coordinates[0] - 15, this.coordinates[1] + 15];
         this.currentSprite = monsterSprites.idle;
         this.shift = 0;
         this.currentSprite.currentFrame = 0;
-      // } else if (this.currentSprite.currentFrame ===
-      //   this.currentSprite.totalFrames && this.currentSprite.name === 'bite') {
-      //
-      //   this.shift = 0;
-      //   this.currentSprite.currentFrame = 0;
+
       } else if (this.currentSprite.currentFrame ===
         this.currentSprite.totalFrames) {
 
         this.shift = 0;
         this.currentSprite.currentFrame = 0;
       }
-
       this.currentSprite.currentFrame += 1;
     }
   }
-  // should prob extract this out to a vector js file
+
   findDirectionVector (playerPos) {
     let x = playerPos[0] - this.coordinates[0];
     let y = playerPos[1] - this.coordinates[1];
@@ -352,16 +321,18 @@ class Monster {
       let playerDir = this.findDirectionVector(this.finalPlayerPos);
       let magnitude = this.findMagnitude(playerDir[0], playerDir[1]);
       let normalized = this.normalizeVector(playerDir, magnitude);
-      let velocity = 1;
-      // debugger
-      this.coordinates[0] = this.coordinates[0] + (normalized[0] * velocity * delta);
-      this.coordinates[1] = this.coordinates[1] + (normalized[1] * velocity * delta);
+      let velocity = 2;
+
+      this.coordinates[0] = this.coordinates[0] + (normalized[0] *
+        velocity * delta);
+      this.coordinates[1] = this.coordinates[1] + (normalized[1] *
+        velocity * delta);
   }
 
   handleIdle () {
       if (this.counter === 200) {
         if (this.targetPos[0] >= this.coordinates[0]) {
-          // debugger
+
           this.currentSprite = monsterSprites.bite_e;
           this.currentSprite.currentFrame = 0;
         } else {
@@ -370,28 +341,22 @@ class Monster {
         }
         this.counter = 0;
       }
-      // debugger
   }
 
   handleBiteWest (delta) {
-    // use chase logic and reset sprite to idle when position reached
+    // BINDS FINAL POSITION BEFORE BITE
     if (this.finalPlayerPos.length === 0) {
       this.finalPlayerPos = Object.assign([], this.targetPos);
     }
-    // debugger
-    if (
-      this.coordinates[0] <= this.finalPlayerPos[0] +50){
-        // debugger
+
+    if (this.coordinates[0] <= this.finalPlayerPos[0] +50){
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
       this.coordinates = [this.finalPlayerPos[0] + 10, this.finalPlayerPos[1]];
       this.finalPlayerPos = [];
       this.targetPos = [];
-      // this.reachedTarget = false;
     } else if (this.coordinates[0] >= this.finalPlayerPos[0]) {
-      window.clearInterval(this.interval);
       this.chasePlayer(this.finalPlayerPos, delta);
-      // this.reachedTarget = false;
     }
   }
 
@@ -401,124 +366,43 @@ class Monster {
     }
 
     if (this.coordinates[0] >= this.finalPlayerPos[0] -50){
-        // debugger
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
       this.coordinates = [this.finalPlayerPos[0] -10, this.finalPlayerPos[1]];
       this.finalPlayerPos = [];
       this.targetPos = [];
     } else if (this.coordinates[0] <= this.finalPlayerPos[0]) {
-      // debugger
       this.chasePlayer(this.finalPlayerPos, delta);
     }
   }
 
   update(playerPos, dt, delta) {
     if (!this.alive) {
-      // debugger
       this.currentSprite = monsterSprites.dead;
       return null;
     }
+    // TRACKS POSITION OF PLAYER
     if (this.targetPos.length === 0) {
       this.interval = setInterval(() => {
           this.targetPos = Object.assign([], playerPos);
       }, 1000);
   }
-
+    // OFFSET FOR IDLE ANIMATION
     this.counter = this.counter || 0;
 
     switch (this.currentSprite.name) {
       case 'idle':
           this.counter++;
-          // if (this.counter >= 150) {
-            this.handleIdle();
-            // this.counter = 0;
-          // }
+          this.handleIdle();
         break;
       case 'bite_w':
         this.handleBiteWest(delta);
         break;
       case 'bite_e':
-        // debugger
         this.handleBiteEast(delta);
         break;
     }
-
   }
-    //
-    // this.interval = setInterval(() => {
-    //   this.currentSprite.name = 'chase';
-    //   // this.coordinates = [750, 300];
-    // }, 5000);
-
-
-//  WORKING CODE BELOW
-    // if (this.coordinates >= [this.targetPos[0], this.targetPos[1]] &&
-    //   this.coordinates <= [this.targetPos[0] + 50, this.targetPos[1] +50]){
-    //
-    //   this.coordinates = this.targetPos;
-    //   this.targetPos = [];
-    //   // this.reachedTarget = false;
-    // } else if (this.currentSprite.name === 'idle' &&
-    // this.coordinates[0] >= this.targetPos[0] && this.coordinates[1] >= this.targetPos[1]) {
-    //
-    //   this.chasePlayer(this.targetPos, delta);
-      // this.reachedTarget = false;
-    // }
-
-// WORKING CODE ABOVE
-
-
-    // if (this.currentSprite.name === 'idle' &&
-    // this.coordinates[0] >= this.targetPos[0] && this.coordinates[1] >= this.targetPos[1]) {
-    //   // debugger
-    //
-    // } else if (this.coordinates >= [this.targetPos[0], this.targetPos[1]] &&
-    //   this.coordinates <= [this.targetPos[0] + 50, this.targetPos[1] +50]){
-    //   debugger
-    //   this.coordinates = this.targetPos;
-    //   this.targetPos = [];
-    // }
-    //
-    // if (this.currentSprite.name === 'idle') {
-    //   setInterval(() => {
-    //     this.chasePlayer(playerPos, delta);
-    //   }, 5000);
-    //
-    //   // this.currentSprite.name = 'chase';
-    // } else if (this.currentSprite.name === 'chase') {
-    //   this.currentSprite.name = 'idle';
-
-
-    // setInterval(())
-    // const keys = [37, 38, 39, 40];
-    // const random = Math.floor(Math.random() * (keys.length - 1));
-    // const key = keys[random];
-    // const spriteHeight = 125;
-
-
-    // if(key === 37) {
-    //   this.currentSprite = 'assets/images/bossworm_front.png';
-    //   if (this.coordinates[0] >= 0) {this.coordinates[0]+=10;}
-    // }
-    // if(key === 38) {
-    //   this.currentSprite = 'assets/images/bossworm_front.png';
-    //   if (this.coordinates[1] >= 0) {this.coordinates[1]-=10;}
-    // }
-    // if(key === 39) {
-    //   this.currentSprite = 'assets/images/bossworm_front.png';
-    //   if (this.coordinates[0] <= (this.canvasW - spriteHeight))
-    //   {this.coordinates[0]-=10;}
-    // }
-    // if(key === 40) {Math.trunc(this.coordinates[1] + (normalized[1] * velocity * delta))
-    //   this.currentSprite = 'assets/images/bossworm_front.png';
-    //   if (this.coordinates[1] <= (this.canvasH - spriteHeight))
-    //   {this.coordinates[1]+=10;}
-    // }
-
-  // set new image and then call src on that image path
-  //
-
 }
 
 module.exports = Monster;
@@ -597,19 +481,6 @@ const monsterSprites = {
 };
 
 module.exports = monsterSprites;
-
-// const devil = {
-//   sprite: new Sprite(()),
-//   monster: new Monster()
-// }
-
-// currentsprite
-// framewidth
-// frameheight
-// totalFrames
-// currentFrame
-// spriteName
-// fps
 
 },{"./sprite":7}],6:[function(require,module,exports){
 class Player {

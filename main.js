@@ -1,7 +1,3 @@
-// CURRENTLY PULLS IN AND RENDERS/MOVES ON CANVAS
-// IS THIS THE BEST PLACE FOR THIS LOGIC? CAN I HOLD ELSEWHERE AND PULL IN?
-// SHOULD MOVEMENT IN GENERAL BE A FIXED CLASS/FUNCTION OR INDIVIDUAL TO THE USER?
-
 let Board = require('./board');
 let monsterSprites = require('./monster_sprites');
 let Sprite = require('./sprite');
@@ -10,18 +6,15 @@ let Player = require('./player');
 let Weapons = require('./weapons');
 let Bullet = require('./bullet');
 
-
-
-
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
-
 
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
   let monster = new Monster(ctx, canvas.width, canvas.height,
     monsterSprites.intro);
+  let lastTime = Date.now();
   let key;
 
   function collisionDetected () {
@@ -66,7 +59,6 @@ window.onload = function() {
   }
 
   function update (key, dt, delta) {
-    // debugger
     player.update(key);
     monster.update(player.coordinates, dt, delta);
     bullets.forEach(bullet => bullet.update(dt));
@@ -88,25 +80,20 @@ window.onload = function() {
       shoot(player.currentPosition());
     }
   };
+
   document.onkeyup = function(evt) {
     key = null;
   };
 
-  let lastTime = Date.now();
   function main() {
-
-    collisionDetected();
-
-    window.requestAnimationFrame( main );
-
     let now = Date.now();
     let delta = now - lastTime;
     let dt = (delta) / 500.0;
+    window.requestAnimationFrame( main );
+    collisionDetected();
     update(key, dt, delta);
     clear();
-
     render(now);
-
     lastTime = now;
   }
   requestAnimationFrame( main );
