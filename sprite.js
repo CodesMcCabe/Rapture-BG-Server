@@ -8,6 +8,7 @@ class Sprite {
     this.totalFrames = options.totalFrames;
     this.once = options.once;
     this.fps = options.fps;
+    this.fpsX = options.fpsX;
   }
 }
 // url, name, pos, size, speed, frames, dir, once

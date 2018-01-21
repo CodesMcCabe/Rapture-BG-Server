@@ -147,6 +147,8 @@ let Weapons = require('./weapons');
 let Bullet = require('./bullet');
 
 
+
+
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
@@ -155,7 +157,7 @@ window.onload = function() {
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
   let monster = new Monster(ctx, canvas.width, canvas.height,
-    new Sprite(monsterSprites.intro));
+    monsterSprites.intro);
   let key;
 
   function collisionDetected () {
@@ -170,9 +172,9 @@ window.onload = function() {
     bullets.forEach(bullet => {
       bulletX = bullet.coordinates[0];
       bulletY = bullet.coordinates[1];
-      if (bulletX < monsterX + monster.frameWidth &&
+      if (bulletX < monsterX + monster.currentSprite.frameWidth &&
         bulletX + bullet.width > monsterX &&
-        bulletY < monsterY + monster.frameHeight &&
+        bulletY < monsterY + monster.currentSprite.frameHeight &&
         bulletY + bullet.height > monsterY) {
         monster.reduceHealth(bullet);
         bullets.splice(0, 1);
@@ -200,15 +202,9 @@ window.onload = function() {
   }
 
   function update (key, dt, delta) {
+    // debugger
     player.update(key);
-
-    let fps = 1000/10;
-
-    console.log(delta);
-    if (delta > fps) {
-
-      monster.update();
-    }
+    monster.update(player.coordinates, dt, delta);
     bullets.forEach(bullet => bullet.update(dt));
   }
 
@@ -222,17 +218,18 @@ window.onload = function() {
     bullets.forEach(bullet => bullet.render());
   }
 
+  document.onkeydown = function (evt) {
+    key = evt.which;
+    if (key === 32) {
+      shoot(player.currentPosition());
+    }
+  };
+  document.onkeyup = function(evt) {
+    key = null;
+  };
+
   let lastTime = Date.now();
   function main() {
-    document.onkeydown = function (evt) {
-      key = evt.which;
-      if (key === 32) {
-        shoot(player.currentPosition());
-      }
-    };
-    document.onkeyup = function(evt) {
-      key = null;
-    };
 
     collisionDetected();
 
@@ -243,16 +240,17 @@ window.onload = function() {
     let dt = (delta) / 500.0;
     update(key, dt, delta);
     clear();
+
     render(now);
 
     lastTime = now;
   }
-   main();
+  requestAnimationFrame( main );
 };
 
 },{"./board":1,"./bullet":2,"./monster":4,"./monster_sprites":5,"./player":6,"./sprite":7,"./weapons":8}],4:[function(require,module,exports){
 // MONSTER WILL CHASE PLAYER, TAKE SHORTEST ROUTE IF POSSIBLE
-let spriteSheet = require('./monster_sprites');
+let monsterSprites = require('./monster_sprites');
 let Sprite = require('./sprite');
 
 class Monster {
@@ -269,6 +267,11 @@ class Monster {
     this.health = 100;
     this.alive = true;
     this.lastUpdate = Date.now();
+    this.gameOver = false;
+
+    this.targetPos = [];
+    this.interval = null;
+    this.counter = 0;
   }
 
   defeated () {
@@ -279,6 +282,7 @@ class Monster {
     this.health -= bullet.damage;
   }
 
+
   // createSprite(sprite) {
   //   if (sprite !== this.currentSprite) {
   //     this.currentSprite = new Sprite(sprite);
@@ -286,23 +290,36 @@ class Monster {
   // }
 
   render(now) {
+    // this.currentSprite.currentFrame = 0;
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite.url;
+    // this.coordinates[0] = Math.floor(this.coordinates[0]);
+    // this.coordinates[1] = Math.floor(this.coordinates[1]);
     this.ctx.drawImage(monsterSprite, this.shift, 0,
       this.currentSprite.frameWidth, this.currentSprite.frameHeight,
       this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
       this.currentSprite.frameHeight);
-
-    if (now - this.lastUpdate > this.currentSprite.fps) {
+        // debugger
+    let fps = this.currentSprite.fps * this.currentSprite.fpsX;
+    if (now - this.lastUpdate > fps && !this.gameOver)  {
+      this.currentSprite.fps = fps;
       this.lastUpdate = now;
       this.shift += this.currentSprite.frameWidth + 1;
-
+      // debugger
       if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
         this.currentSprite.name === 'intro') {
-        // this.currentSprite = 'assets/images/worm_idle.png';
-        // this.s = 'idle';
+      // if (this.currentSprite.currentFrame === this.currentSprite.totalFrames - 2) {
+          // th
+        // debugger
+        this.coordinates = [this.coordinates[0] - 15, this.coordinates[1] + 15];
+        this.currentSprite = monsterSprites.idle;
         this.shift = 0;
         this.currentSprite.currentFrame = 0;
+      // } else if (this.currentSprite.currentFrame ===
+      //   this.currentSprite.totalFrames && this.currentSprite.name === 'bite') {
+      //
+      //   this.shift = 0;
+      //   this.currentSprite.currentFrame = 0;
       } else if (this.currentSprite.currentFrame ===
         this.currentSprite.totalFrames) {
 
@@ -310,20 +327,168 @@ class Monster {
         this.currentSprite.currentFrame = 0;
       }
 
-      this.currentSprite.currentFrame++;
+      this.currentSprite.currentFrame += 1;
+    }
+  }
+  // should prob extract this out to a vector js file
+  findDirectionVector (playerPos) {
+    let x = playerPos[0] - this.coordinates[0];
+    let y = playerPos[1] - this.coordinates[1];
+    return [x, y];
+  }
+
+  findMagnitude (x, y) {
+    let magnitude = Math.sqrt(x * x + y * y);
+    return magnitude;
+  }
+  normalizeVector (playerDir, magnitude) {
+    return [(playerDir[0]/magnitude), (playerDir[1]/magnitude)];
+  }
+
+  chasePlayer (playerPos, delta) {
+    // debugger
+      let playerDir = this.findDirectionVector(playerPos);
+      let magnitude = this.findMagnitude(playerDir[0], playerDir[1]);
+      let normalized = this.normalizeVector(playerDir, magnitude);
+      let velocity = 1;
+      // debugger
+      this.coordinates[0] = this.coordinates[0] + (normalized[0] * velocity * delta);
+      this.coordinates[1] = this.coordinates[1] + (normalized[1] * velocity * delta);
+  }
+
+  handleIdle () {
+      if (this.counter === 200) {
+        if (this.targetPos[0] >= this.coordinates[0]) {
+          // debugger
+          this.currentSprite = monsterSprites.bite_e;
+          this.currentSprite.currentFrame = 0;
+        } else {
+          this.currentSprite = monsterSprites.bite_w;
+          this.currentSprite.currentFrame = 0;
+        }
+        this.counter = 0;
+      }
+      // debugger
+  }
+
+  handleBiteWest (delta) {
+    // use chase logic and reset sprite to idle when position reached
+    // debugger
+    if (
+      this.coordinates[0] <= this.targetPos[0] +50){
+        // debugger
+      this.currentSprite = monsterSprites.idle;
+      this.currentSprite.currentFrame = 0;
+      this.coordinates = [this.targetPos[0] + 10, this.targetPos[1]];
+
+      this.targetPos = [];
+      // this.reachedTarget = false;
+    } else if (this.coordinates[0] >= this.targetPos[0]) {
+
+      this.chasePlayer(this.targetPos, delta);
+      // this.reachedTarget = false;
     }
   }
 
-  update(delta) {
+  handleBiteEast (delta) {
+
+    if (this.coordinates[0] >= this.targetPos[0] -50){
+        // debugger
+      this.currentSprite = monsterSprites.idle;
+      this.currentSprite.currentFrame = 0;
+      this.coordinates = [this.targetPos[0] -10, this.targetPos[1]];
+      // debugger
+      this.targetPos = [];
+    } else if (this.coordinates[0] <= this.targetPos[0]) {
+      // debugger
+      this.chasePlayer(this.targetPos, delta);
+    }
+  }
+
+  update(playerPos, dt, delta) {
     if (!this.alive) {
-      this.currentSprite = 'assets/images/boss_die.png';
+      // debugger
+      this.currentSprite = monsterSprites.dead;
       return null;
     }
+    if (this.targetPos.length === 0) {
+      // setTimeout(() => {
+          this.targetPos = Object.assign([], playerPos);
 
-    const keys = [37, 38, 39, 40];
-    const random = Math.floor(Math.random() * (keys.length - 1));
-    const key = keys[random];
-    const spriteHeight = 125;
+      // }, 2000);
+  }
+
+    this.counter = this.counter || 0;
+
+    switch (this.currentSprite.name) {
+      case 'idle':
+          this.counter++;
+          // if (this.counter >= 150) {
+            this.handleIdle();
+            // this.counter = 0;
+          // }
+        break;
+      case 'bite_w':
+        this.handleBiteWest(delta);
+        break;
+      case 'bite_e':
+        // debugger
+        this.handleBiteEast(delta);
+        break;
+    }
+
+  }
+    //
+    // this.interval = setInterval(() => {
+    //   this.currentSprite.name = 'chase';
+    //   // this.coordinates = [750, 300];
+    // }, 5000);
+
+
+//  WORKING CODE BELOW
+    // if (this.coordinates >= [this.targetPos[0], this.targetPos[1]] &&
+    //   this.coordinates <= [this.targetPos[0] + 50, this.targetPos[1] +50]){
+    //
+    //   this.coordinates = this.targetPos;
+    //   this.targetPos = [];
+    //   // this.reachedTarget = false;
+    // } else if (this.currentSprite.name === 'idle' &&
+    // this.coordinates[0] >= this.targetPos[0] && this.coordinates[1] >= this.targetPos[1]) {
+    //
+    //   this.chasePlayer(this.targetPos, delta);
+      // this.reachedTarget = false;
+    // }
+
+// WORKING CODE ABOVE
+
+
+    // if (this.currentSprite.name === 'idle' &&
+    // this.coordinates[0] >= this.targetPos[0] && this.coordinates[1] >= this.targetPos[1]) {
+    //   // debugger
+    //
+    // } else if (this.coordinates >= [this.targetPos[0], this.targetPos[1]] &&
+    //   this.coordinates <= [this.targetPos[0] + 50, this.targetPos[1] +50]){
+    //   debugger
+    //   this.coordinates = this.targetPos;
+    //   this.targetPos = [];
+    // }
+    //
+    // if (this.currentSprite.name === 'idle') {
+    //   setInterval(() => {
+    //     this.chasePlayer(playerPos, delta);
+    //   }, 5000);
+    //
+    //   // this.currentSprite.name = 'chase';
+    // } else if (this.currentSprite.name === 'chase') {
+    //   this.currentSprite.name = 'idle';
+
+
+    // setInterval(())
+    // const keys = [37, 38, 39, 40];
+    // const random = Math.floor(Math.random() * (keys.length - 1));
+    // const key = keys[random];
+    // const spriteHeight = 125;
+
 
     // if(key === 37) {
     //   this.currentSprite = 'assets/images/bossworm_front.png';
@@ -338,12 +503,11 @@ class Monster {
     //   if (this.coordinates[0] <= (this.canvasW - spriteHeight))
     //   {this.coordinates[0]-=10;}
     // }
-    // if(key === 40) {
+    // if(key === 40) {Math.trunc(this.coordinates[1] + (normalized[1] * velocity * delta))
     //   this.currentSprite = 'assets/images/bossworm_front.png';
     //   if (this.coordinates[1] <= (this.canvasH - spriteHeight))
     //   {this.coordinates[1]+=10;}
     // }
-  }
 
   // set new image and then call src on that image path
   //
@@ -353,17 +517,76 @@ class Monster {
 module.exports = Monster;
 
 },{"./monster_sprites":5,"./sprite":7}],5:[function(require,module,exports){
-const monsterSprites = {
+let Sprite = require('./sprite');
+
+const monsterSpriteSheet = {
   intro: {
     url: 'assets/images/worm_intro.png',
     name: 'intro',
     frameHeight: 166,
-    frameWidth: 153,
+    frameWidth: 152,
     currentFrame: 0,
     totalFrames: 16,
     once: true,
-    fps: 80,
+    fps: 250,
+    fpsX: .92,
+  },
+
+  idle: {
+    url: 'assets/images/worm_idle.png',
+    name: 'idle',
+    frameHeight: 173,
+    frameWidth: 202.25,
+    currentFrame: 0,
+    totalFrames: 12,
+    once: false,
+    fps: 125,
+    fpsX: 1,
+  },
+
+  bite_w: {
+    url: 'assets/images/bite_west.png',
+    name: 'bite_w',
+    frameHeight: 163,
+    frameWidth: 192,
+    currentFrame: 0,
+    totalFrames: 5,
+    once: false,
+    fps: 200,
+    fpsX: 1,
+  },
+
+  bite_e: {
+    url: 'assets/images/bite_east.png',
+    name: 'bite_e',
+    frameHeight: 163,
+    frameWidth: 192,
+    currentFrame: 0,
+    totalFrames: 5,
+    once: false,
+    fps: 200,
+    fpsX: 1,
+  },
+
+  dead: {
+    url: 'assets/images/worm_dead.png',
+    name: 'dead',
+    frameHeight: 163,
+    frameWidth: 155,
+    currentFrame: 0,
+    totalFrames: 4,
+    once: true,
+    fps: 125,
+    fpsX: 1,
   }
+};
+
+const monsterSprites = {
+  intro: new Sprite(monsterSpriteSheet.intro),
+  idle: new Sprite(monsterSpriteSheet.idle),
+  dead: new Sprite(monsterSpriteSheet.dead),
+  bite_w: new Sprite(monsterSpriteSheet.bite_w),
+  bite_e: new Sprite(monsterSpriteSheet.bite_e)
 };
 
 module.exports = monsterSprites;
@@ -381,7 +604,7 @@ module.exports = monsterSprites;
 // spriteName
 // fps
 
-},{}],6:[function(require,module,exports){
+},{"./sprite":7}],6:[function(require,module,exports){
 class Player {
   // player physics
   // FIGURE OUT HOW TO MAKE IT SO WHEN A KEY IS RELEASED,
@@ -391,7 +614,7 @@ class Player {
     this.ctx = ctx;
     this.canvasW = canvasW;
     this.canvasH = canvasH;
-    this.coordinates = [0, 0];
+    this.coordinates = [100, 100];
     this.currentSprite = 'assets/images/player_rifle.png';
     this.facingPos = "right";
     this.height = 40;
@@ -437,28 +660,29 @@ class Player {
   update(key) {
     const spriteHeight = 125;
     this.setHitBox(this.facingPos);
+    let speed = 15;
 
     if(key === 37) {
       this.currentSprite = 'assets/images/player_rifle_left.png';
       this.facingPos = "left";
-      if (this.coordinates[0] >= 5) {this.coordinates[0]-=10;}
+      if (this.coordinates[0] >= 5) {this.coordinates[0]-=speed;}
     }
     if(key === 38) {
       this.currentSprite = 'assets/images/player_rifle_up.png';
       this.facingPos = "up";
-      if (this.coordinates[1] >= 15) {this.coordinates[1]-=10;}
+      if (this.coordinates[1] >= 15) {this.coordinates[1]-=speed;}
     }
     if(key === 39) {
       this.currentSprite = 'assets/images/player_rifle.png';
       this.facingPos = "right";
       if (this.coordinates[0] <= (this.canvasW - this.height - 30))
-      {this.coordinates[0]+=10;}
+      {this.coordinates[0]+=speed;}
     }
     if(key === 40) {
       this.currentSprite = 'assets/images/player_rifle_down.png';
       this.facingPos = "down";
       if (this.coordinates[1] <= (this.canvasH - this.height))
-      {this.coordinates[1]+=10;}
+      {this.coordinates[1]+=speed;}
     }
   }
 
@@ -477,6 +701,7 @@ class Sprite {
     this.totalFrames = options.totalFrames;
     this.once = options.once;
     this.fps = options.fps;
+    this.fpsX = options.fpsX;
   }
 }
 // url, name, pos, size, speed, frames, dir, once

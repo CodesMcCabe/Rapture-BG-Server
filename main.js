@@ -11,6 +11,8 @@ let Weapons = require('./weapons');
 let Bullet = require('./bullet');
 
 
+
+
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
@@ -19,7 +21,7 @@ window.onload = function() {
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
   let monster = new Monster(ctx, canvas.width, canvas.height,
-    new Sprite(monsterSprites.intro));
+    monsterSprites.intro);
   let key;
 
   function collisionDetected () {
@@ -34,9 +36,9 @@ window.onload = function() {
     bullets.forEach(bullet => {
       bulletX = bullet.coordinates[0];
       bulletY = bullet.coordinates[1];
-      if (bulletX < monsterX + monster.frameWidth &&
+      if (bulletX < monsterX + monster.currentSprite.frameWidth &&
         bulletX + bullet.width > monsterX &&
-        bulletY < monsterY + monster.frameHeight &&
+        bulletY < monsterY + monster.currentSprite.frameHeight &&
         bulletY + bullet.height > monsterY) {
         monster.reduceHealth(bullet);
         bullets.splice(0, 1);
@@ -64,15 +66,9 @@ window.onload = function() {
   }
 
   function update (key, dt, delta) {
+    // debugger
     player.update(key);
-
-    let fps = 1000/10;
-
-    console.log(delta);
-    if (delta > fps) {
-
-      monster.update();
-    }
+    monster.update(player.coordinates, dt, delta);
     bullets.forEach(bullet => bullet.update(dt));
   }
 
@@ -86,17 +82,18 @@ window.onload = function() {
     bullets.forEach(bullet => bullet.render());
   }
 
+  document.onkeydown = function (evt) {
+    key = evt.which;
+    if (key === 32) {
+      shoot(player.currentPosition());
+    }
+  };
+  document.onkeyup = function(evt) {
+    key = null;
+  };
+
   let lastTime = Date.now();
   function main() {
-    document.onkeydown = function (evt) {
-      key = evt.which;
-      if (key === 32) {
-        shoot(player.currentPosition());
-      }
-    };
-    document.onkeyup = function(evt) {
-      key = null;
-    };
 
     collisionDetected();
 
@@ -107,9 +104,10 @@ window.onload = function() {
     let dt = (delta) / 500.0;
     update(key, dt, delta);
     clear();
+
     render(now);
 
     lastTime = now;
   }
-   main();
+  requestAnimationFrame( main );
 };

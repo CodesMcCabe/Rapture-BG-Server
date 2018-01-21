@@ -7,7 +7,7 @@ class Player {
     this.ctx = ctx;
     this.canvasW = canvasW;
     this.canvasH = canvasH;
-    this.coordinates = [0, 0];
+    this.coordinates = [100, 100];
     this.currentSprite = 'assets/images/player_rifle.png';
     this.facingPos = "right";
     this.height = 40;
@@ -53,28 +53,29 @@ class Player {
   update(key) {
     const spriteHeight = 125;
     this.setHitBox(this.facingPos);
+    let speed = 15;
 
     if(key === 37) {
       this.currentSprite = 'assets/images/player_rifle_left.png';
       this.facingPos = "left";
-      if (this.coordinates[0] >= 5) {this.coordinates[0]-=10;}
+      if (this.coordinates[0] >= 5) {this.coordinates[0]-=speed;}
     }
     if(key === 38) {
       this.currentSprite = 'assets/images/player_rifle_up.png';
       this.facingPos = "up";
-      if (this.coordinates[1] >= 15) {this.coordinates[1]-=10;}
+      if (this.coordinates[1] >= 15) {this.coordinates[1]-=speed;}
     }
     if(key === 39) {
       this.currentSprite = 'assets/images/player_rifle.png';
       this.facingPos = "right";
       if (this.coordinates[0] <= (this.canvasW - this.height - 30))
-      {this.coordinates[0]+=10;}
+      {this.coordinates[0]+=speed;}
     }
     if(key === 40) {
       this.currentSprite = 'assets/images/player_rifle_down.png';
       this.facingPos = "down";
       if (this.coordinates[1] <= (this.canvasH - this.height))
-      {this.coordinates[1]+=10;}
+      {this.coordinates[1]+=speed;}
     }
   }
 
