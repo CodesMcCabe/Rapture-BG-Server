@@ -1,11 +1,23 @@
 let Sprite = require('./sprite');
 
 const monsterSpriteSheet = {
+  dirt: {
+    url: 'assets/images/worm_intro.png',
+    name: 'intro',
+    frameHeight: 166,
+    frameWidth: 153,
+    currentFrame: 0,
+    totalFrames: 16,
+    once: true,
+    fps: 250,
+    fpsX: 1,
+  },
+
   intro: {
     url: 'assets/images/worm_intro.png',
     name: 'intro',
     frameHeight: 166,
-    frameWidth: 152,
+    frameWidth: 153,
     currentFrame: 0,
     totalFrames: 16,
     once: true,
@@ -17,7 +29,7 @@ const monsterSpriteSheet = {
     url: 'assets/images/worm_idle.png',
     name: 'idle',
     frameHeight: 173,
-    frameWidth: 202.25,
+    frameWidth: 203,
     currentFrame: 0,
     totalFrames: 12,
     once: false,
@@ -57,8 +69,8 @@ const monsterSpriteSheet = {
     currentFrame: 0,
     totalFrames: 4,
     once: true,
-    fps: 125,
-    fpsX: 1,
+    fps: 200,
+    fpsX: 1.5,
   }
 };
 

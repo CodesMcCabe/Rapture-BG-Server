@@ -7,7 +7,7 @@ class Player {
     this.ctx = ctx;
     this.canvasW = canvasW;
     this.canvasH = canvasH;
-    this.coordinates = [100, 100];
+    this.coordinates = [0, 0];
     this.currentSprite = 'assets/images/player_rifle.png';
     this.facingPos = "right";
     this.height = 40;
