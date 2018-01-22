@@ -1,7 +1,27 @@
-3) monster shoot on idle
-5) game over on hit [WEEKEND]
-6) reset game
-8) animate mo
-7) weapons
-8) update background
-9) random walls emerge and block paths
+1) Reset game on death
+2) Real modal for game start and end
+NEEDED:
+- INSTRUCTIONS
+- LINKS
+- CREATED BY
+- ARTIST CREDITS
+3) Fix monster screen boundry
+4) Fix Monster death animation, should stop after one animation
+5) Animate Player death
+6) Throttle amt of bullets rendered
+7) Fix player movement that tracks keys pressed
+8) monster spawn little worms
+9) Game Timer
+10) monster shoot on idle
+
+// Fully functional fun game if above is complete
+
+- game continues in background when gameover
+- game startes with player able to move around, doesnt start until shoot pile or get near
+- Fix monster hitbox, needs to be smaller
+- monster spit on idle
+- more worms spawn as time goes on
+- track
+- weapons
+- random walls emerge and block paths
+- incorporate digging animation that tracks player for a while, if caught pops out and eats player
