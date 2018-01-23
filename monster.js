@@ -4,9 +4,6 @@ let Sprite = require('./sprite');
 
 class Monster {
   constructor (ctx, canvasW, canvasH, sprite) {
-    // this.name = options.name;
-    // this.power = options.power;
-    // this.sprite = options.sprite;
     this.canvasW = canvasW;
     this.canvasH = canvasH;
     this.ctx = ctx;
@@ -33,14 +30,6 @@ class Monster {
   }
 
   render(now) {
-    // if (this.coordinates[0] > this.canvasW) {
-    //   this.coordinates[0] = this.canvasW;
-    // }
-    //
-    // if (this.coordinates[1] > this.canvasH - 50) {
-    //   this.coordinates[1] = this.canvasH - 50;
-    // }
-
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite.url;
     this.ctx.drawImage(monsterSprite, this.shift, 0,

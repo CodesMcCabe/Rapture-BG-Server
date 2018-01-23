@@ -1,5 +1,6 @@
 let Board = require('./board');
 let monsterSprites = require('./monster_sprites');
+let playerSprites = require('./player_sprites');
 let Sprite = require('./sprite');
 let Monster = require('./monster');
 let Player = require('./player');
@@ -34,19 +35,20 @@ window.onload = function() {
 
   function restartGame () {
     let gameOver = document.getElementById('game_over');
-
     // let gameOver = document.getElementById('game_over');
     gameOver.style.display = "none";
     monster = new Monster(ctx, canvas.width, canvas.height,
       monsterSprites.intro);
-    player = new Player(ctx, canvas.width, canvas.height);
+    player = new Player(ctx, canvas.width, canvas.height,
+      playerSprites.aliveRight);
   }
 
   let monster = new Monster(ctx, canvas.width, canvas.height,
     monsterSprites.intro);
   let gameStart = false;
   let bullets = [];
-  let player = new Player(ctx, canvas.width, canvas.height);
+  let player = new Player(ctx, canvas.width, canvas.height,
+    playerSprites.aliveRight);
   let lastTime = Date.now();
   let key;
   let allowFire = true;
@@ -59,15 +61,16 @@ window.onload = function() {
     let playerY = player.coordinates[1];
     let monsterX = monster.coordinates[0];
     let monsterY = monster.coordinates[1];
+    let mHBoffset = 50;
 
     if (gameStart) {
       bullets.forEach(bullet => {
         bulletX = bullet.coordinates[0];
         bulletY = bullet.coordinates[1];
-        if (bulletX < monsterX + monster.currentSprite.frameWidth &&
-          bulletX + bullet.width > monsterX &&
-          bulletY < monsterY + monster.currentSprite.frameHeight &&
-          bulletY + bullet.height > monsterY) {
+        if (bulletX < monsterX + monster.currentSprite.frameWidth - mHBoffset &&
+          bulletX + bullet.width > monsterX + mHBoffset &&
+          bulletY < monsterY + monster.currentSprite.frameHeight - mHBoffset &&
+          bulletY + bullet.height > monsterY + mHBoffset) {
             monster.reduceHealth(bullet);
             bullets.splice(0, 1);
 
@@ -80,11 +83,12 @@ window.onload = function() {
         }
       );
     }
-    if (playerX < monsterX + monster.currentSprite.frameWidth &&
-      playerX + player.width > monsterX &&
-      playerY < monsterY + monster.currentSprite.frameHeight &&
-      playerY + player.height > monsterY &&
+    if (playerX < monsterX + monster.currentSprite.frameWidth - mHBoffset&&
+      playerX + player.width > monsterX + mHBoffset&&
+      playerY < monsterY + monster.currentSprite.frameHeight - mHBoffset&&
+      playerY + player.height > monsterY + mHBoffset&&
       monster.alive) {
+        player.dead();
         let gameOver = document.getElementById('game_over');
         let timeout = setTimeout(() => {
           gameOver.style.display = 'block';
@@ -93,6 +97,7 @@ window.onload = function() {
         gameOver.addEventListener('click', function(e) {
           clearTimeout(timeout);
           gameOver.style.display = 'none';
+          player.currentSprite.currentFrame = 0;
           restartGame();
         });
       }
@@ -133,7 +138,7 @@ window.onload = function() {
     if (gameStart) {
       monster.render(now);
     }
-    player.render();
+    player.render(now);
     bullets.forEach(bullet => bullet.render());
   }
 
