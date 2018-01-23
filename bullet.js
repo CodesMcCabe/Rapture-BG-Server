@@ -83,25 +83,25 @@ class Bullet {
 
     if (this.playerFace === "left") {
       this.currentSprite = 'assets/images/bullet_horz.png';
-      this.coordinates[0]-= (500 * dt);
+      this.coordinates[0]-= (800 * dt);
       this.active = this.active && this.coordinates[0] >= 0;
     }
 
     if (this.playerFace === "up") {
       this.currentSprite = 'assets/images/bullet_vert.png';
-      this.coordinates[1]-= (500 * dt);
+      this.coordinates[1]-= (800 * dt);
       this.active = this.active && this.coordinates[1] >= 0;
     }
 
     if (this.playerFace === "right") {
       this.currentSprite = 'assets/images/bullet_horz.png';
-      this.coordinates[0]+= (500 * dt);
+      this.coordinates[0]+= (800 * dt);
       this.active = this.active && this.coordinates[0] <= this.canvasW;
     }
 
     if (this.playerFace === "down") {
       this.currentSprite = 'assets/images/bullet_vert.png';
-      this.coordinates[1]+= (500 * dt);
+      this.coordinates[1]+= (800 * dt);
       this.active = this.active && this.coordinates[1] <= this.canvasH;
     }
   }

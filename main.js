@@ -22,24 +22,31 @@ window.onload = function() {
   // }
 
   function startGame () {
-    let start = new Image();
-    start.src = startButton;
-    start.onload = function () {
-      ctx.drawImage(start, 600, 300);
-      canvas.addEventListener('click', function(e) {
+
+    let start = document.getElementById('start');
+    start.addEventListener('click', function(e) {
+          start.className = 'start_button_hide';
           gameStart = true;
-          myReq = requestAnimationFrame( main );
-        });
-    };
+      });
+    }
+
+  function restartGame () {
+    debugger
+    let gameOver = document.getElementById('game_over');
+    gameOver.style.display = "none";
+    monster = new Monster(ctx, canvas.width, canvas.height,
+      monsterSprites.intro);
+    player = new Player(ctx, canvas.width, canvas.height);
   }
 
+  let monster = new Monster(ctx, canvas.width, canvas.height,
+    monsterSprites.intro);
   let gameStart = false;
   let bullets = [];
   let player = new Player(ctx, canvas.width, canvas.height);
-  let monster = new Monster(ctx, canvas.width, canvas.height,
-    monsterSprites.intro);
   let lastTime = Date.now();
   let key;
+  let allowFire = true;
 
   function collisionDetected () {
     let collideBullets = Object.assign([], bullets);
@@ -63,6 +70,8 @@ window.onload = function() {
 
             if (monster.health <= 0) {
               monster.defeated();
+
+
             }
           }
         }
@@ -73,21 +82,36 @@ window.onload = function() {
       playerY < monsterY + monster.currentSprite.frameHeight &&
       playerY + player.height > monsterY &&
       monster.alive) {
-        // cancelAnimationFrame(myReq);
-        let gameOver = new Image();
-        gameOver.src = gameOverSprite;
-        ctx.drawImage(gameOver, 600, 300);
+        debugger
+        let gameOver = document.getElementById('game_over');
+        gameOver.addEventListener('click', function(e) {
+          gameOver.className = 'restart_button_hide';
+          restartGame();
+        });
         setTimeout(() => {
-          startGame();
-        }, 3000);
+          gameOver.className = 'restart_button_show';
+        }, 2000);
+
       }
   }
 
+  let lastBullet;
+  function Fire () {
+    allowFire = false;
+    setTimeout(() => {
+      allowFire = true;
+    }, 250);
+  }
 
   function shoot (playerPos) {
-    bullets.push(new Bullet(playerPos, canvas.width,
-      canvas.height, ctx));
-    bullets = bullets.filter(bullet => bullet.active);
+
+    if (allowFire) {
+      bullets.push(new Bullet(playerPos, canvas.width,
+        canvas.height, ctx));
+        bullets = bullets.filter(bullet => bullet.active);
+    }
+
+    Fire();
   }
 
   function update (key, dt, delta) {
@@ -112,15 +136,17 @@ window.onload = function() {
 
   document.onkeydown = function (evt) {
     key = evt.which;
+    player.keyPressed[key] = true;
     if (key === 32) {
       shoot(player.currentPosition());
     }
   };
 
   document.onkeyup = function(evt) {
+    player.keyPressed[evt.which] = false;
     key = null;
   };
-
+  // let delta;
   function main() {
     let now = Date.now();
     let delta = now - lastTime;
@@ -132,5 +158,6 @@ window.onload = function() {
     render(now);
     lastTime = now;
   }
+  myReq = requestAnimationFrame( main );
   startGame();
 };

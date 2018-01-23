@@ -12,6 +12,7 @@ class Player {
     this.facingPos = "right";
     this.height = 40;
     this.width = 80;
+    this.keyPressed = {};
   }
 
   render() {
@@ -55,23 +56,23 @@ class Player {
     this.setHitBox(this.facingPos);
     let speed = 15;
 
-    if(key === 37) {
+    if(this.keyPressed[37]) {
       this.currentSprite = 'assets/images/player_rifle_left.png';
       this.facingPos = "left";
       if (this.coordinates[0] >= 5) {this.coordinates[0]-=speed;}
-    }
-    if(key === 38) {
+    } 
+    if(this.keyPressed[38]) {
       this.currentSprite = 'assets/images/player_rifle_up.png';
       this.facingPos = "up";
       if (this.coordinates[1] >= 15) {this.coordinates[1]-=speed;}
-    }
-    if(key === 39) {
+    } 
+    if(this.keyPressed[39]) {
       this.currentSprite = 'assets/images/player_rifle.png';
       this.facingPos = "right";
       if (this.coordinates[0] <= (this.canvasW - this.height - 30))
       {this.coordinates[0]+=speed;}
-    }
-    if(key === 40) {
+    } 
+    if(this.keyPressed[40]) {
       this.currentSprite = 'assets/images/player_rifle_down.png';
       this.facingPos = "down";
       if (this.coordinates[1] <= (this.canvasH - this.height))

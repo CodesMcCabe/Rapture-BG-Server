@@ -33,6 +33,14 @@ class Monster {
   }
 
   render(now) {
+    // if (this.coordinates[0] > this.canvasW) {
+    //   this.coordinates[0] = this.canvasW;
+    // }
+    //
+    // if (this.coordinates[1] > this.canvasH - 50) {
+    //   this.coordinates[1] = this.canvasH - 50;
+    // }
+
     var monsterSprite = new Image();
     monsterSprite.src = this.currentSprite.url;
     this.ctx.drawImage(monsterSprite, this.shift, 0,
@@ -114,7 +122,7 @@ class Monster {
     if (this.coordinates[0] <= this.finalPlayerPos[0] +50){
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
-      this.coordinates = [this.finalPlayerPos[0] + 10, this.finalPlayerPos[1]];
+      // this.coordinates = [this.finalPlayerPos[0] + 50, this.finalPlayerPos[1] - ];
       this.finalPlayerPos = [];
       this.targetPos = [];
     } else if (this.coordinates[0] >= this.finalPlayerPos[0]) {
@@ -130,7 +138,7 @@ class Monster {
     if (this.coordinates[0] >= this.finalPlayerPos[0] -50){
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
-      this.coordinates = [this.finalPlayerPos[0] -10, this.finalPlayerPos[1]];
+      // this.coordinates = [this.finalPlayerPos[0] -10, this.finalPlayerPos[1]];
       this.finalPlayerPos = [];
       this.targetPos = [];
     } else if (this.coordinates[0] <= this.finalPlayerPos[0]) {
@@ -164,6 +172,8 @@ class Monster {
         this.handleBiteEast(delta);
         break;
     }
+
+
   }
 }
 
