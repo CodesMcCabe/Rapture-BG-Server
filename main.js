@@ -30,9 +30,12 @@ window.onload = function() {
       });
     }
 
+
+
   function restartGame () {
-    debugger
     let gameOver = document.getElementById('game_over');
+
+    // let gameOver = document.getElementById('game_over');
     gameOver.style.display = "none";
     monster = new Monster(ctx, canvas.width, canvas.height,
       monsterSprites.intro);
@@ -82,16 +85,16 @@ window.onload = function() {
       playerY < monsterY + monster.currentSprite.frameHeight &&
       playerY + player.height > monsterY &&
       monster.alive) {
-        debugger
         let gameOver = document.getElementById('game_over');
-        gameOver.addEventListener('click', function(e) {
-          gameOver.className = 'restart_button_hide';
-          restartGame();
-        });
-        setTimeout(() => {
-          gameOver.className = 'restart_button_show';
+        let timeout = setTimeout(() => {
+          gameOver.style.display = 'block';
         }, 2000);
 
+        gameOver.addEventListener('click', function(e) {
+          clearTimeout(timeout);
+          gameOver.style.display = 'none';
+          restartGame();
+        });
       }
   }
 

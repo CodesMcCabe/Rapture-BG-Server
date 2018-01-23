@@ -36,18 +36,27 @@ header {
   border-radius: 25px;
 }
 
-.restart_button {
-  display: none;
+.gameover_screen {
+  position: absolute;
+  z-index: 1;
+  left: 35%;
+  top: 30%;
 }
 
-.restart_button_hide {
+.restart_button {
+  display: none;
+  cursor: pointer;
+  left: 30%;
+}
+
+/* .restart_button_ {
   display: none;
 }
 
 .restart_button_show {
   display:block;
   cursor: pointer;
-}
+} */
 
 
 
