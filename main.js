@@ -89,6 +89,7 @@ window.onload = function() {
       playerY + player.hitBoxH > monsterY + mHBoffset&&
       monster.alive) {
         player.dead();
+        monster.playerDefeated();
         let gameOver = document.getElementById('game_over');
         let timeout = setTimeout(() => {
           gameOver.style.display = 'block';
@@ -148,7 +149,7 @@ window.onload = function() {
   document.onkeydown = function (evt) {
     key = evt.which;
     player.keyPressed[key] = true;
-    if (key === 32) {
+    if (key === 32 && player.alive) {
       shoot(player.currentPosition());
     }
   };
