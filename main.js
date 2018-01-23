@@ -61,7 +61,7 @@ window.onload = function() {
     let playerY = player.coordinates[1];
     let monsterX = monster.coordinates[0];
     let monsterY = monster.coordinates[1];
-    let mHBoffset = 50;
+    let mHBoffset = 40;
 
     if (gameStart) {
       bullets.forEach(bullet => {
@@ -84,9 +84,9 @@ window.onload = function() {
       );
     }
     if (playerX < monsterX + monster.currentSprite.frameWidth - mHBoffset&&
-      playerX + player.width > monsterX + mHBoffset&&
+      playerX + player.hitBoxW > monsterX + mHBoffset&&
       playerY < monsterY + monster.currentSprite.frameHeight - mHBoffset&&
-      playerY + player.height > monsterY + mHBoffset&&
+      playerY + player.hitBoxH > monsterY + mHBoffset&&
       monster.alive) {
         player.dead();
         let gameOver = document.getElementById('game_over');
@@ -98,6 +98,7 @@ window.onload = function() {
           clearTimeout(timeout);
           gameOver.style.display = 'none';
           player.currentSprite.currentFrame = 0;
+          monsterSprites.intro.currentFrame = 0;
           restartGame();
         });
       }
@@ -124,6 +125,8 @@ window.onload = function() {
 
   function update (key, dt, delta) {
     player.update(key);
+    // let playerCenterPos =
+      // player.setCenterCoords(player.coordinates[0], player.coordinates[1]);
     if (gameStart) {
       monster.update(player.coordinates, dt, delta);
     }

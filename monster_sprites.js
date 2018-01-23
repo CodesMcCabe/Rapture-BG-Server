@@ -46,7 +46,7 @@ const monsterSpriteSheet = {
     totalFrames: 5,
     once: false,
     fps: 200,
-    fpsX: 1,
+    fpsX: 1.5,
   },
 
   bite_e: {

@@ -9,19 +9,26 @@ class Player {
     this.coordinates = [0, 0];
     this.currentSprite = sprite;
     this.facingPos = "right";
-    this.height = 40;
-    this.width = 80;
+    this.hitBoxH = 55;
+    this.hitBoxW = 69;
     this.keyPressed = {};
     this.alive = true;
     this.shift = 0;
     this.gameOver = false;
     this.lastUpdate = Date.now();
+    this.centerCoords = [0, 0];
+  }
+
+  setCenterCoords (x, y) {
+    let centerX = x + (this.currentSprite.frameWidth / 2);
+    let centerY = y + (this.currentSprite.frameHeight / 2);
+
+    return [centerX, centerY];
   }
 
   render(now) {
     var playerSprite = new Image();
     playerSprite.src = this.currentSprite.url;
-    // this.ctx.drawImage(playerSprite, this.coordinates[0], this.coordinates[1]);
     this.ctx.drawImage(playerSprite, this.shift, 0,
       this.currentSprite.frameWidth, this.currentSprite.frameHeight,
       this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
@@ -57,20 +64,20 @@ class Player {
   setHitBox (facingPos) {
     switch (facingPos) {
       case "left":
-        this.height = 40;
-        this.width = 80;
+        this.hitBoxH = 55;
+        this.hitBoxW = 69;
         break;
       case "up":
-        this.height = 80;
-        this.width = 40;
+        this.hitBoxH = 69;
+        this.hitBoxW = 55;
         break;
       case "right":
-        this.height = 40;
-        this.width = 80;
+        this.hitBoxH = 55;
+        this.hitBoxW = 69;
         break;
       case "down":
-        this.height = 80;
-        this.width = 40;
+        this.hitBoxH = 69;
+        this.hitBoxW = 55;
         break;
       default:
         return facingPos;
@@ -87,7 +94,7 @@ class Player {
   update(key) {
     const spriteHeight = 125;
     this.setHitBox(this.facingPos);
-    let speed = 15;
+    let speed = 12;
 
     if (this.alive) {
       if(this.keyPressed[37]) {
@@ -103,13 +110,13 @@ class Player {
       if(this.keyPressed[39]) {
         this.currentSprite = playerSprites.aliveRight;
         this.facingPos = "right";
-        if (this.coordinates[0] <= (this.canvasW - this.height - 30))
+        if (this.coordinates[0] <= (this.canvasW - this.hitBoxH - 30))
         {this.coordinates[0]+=speed;}
       }
       if(this.keyPressed[40]) {
         this.currentSprite = playerSprites.aliveDown;
         this.facingPos = "down";
-        if (this.coordinates[1] <= (this.canvasH - this.height))
+        if (this.coordinates[1] <= (this.canvasH - this.hitBoxH))
         {this.coordinates[1]+=speed;}
       }
     } else {

@@ -28,10 +28,12 @@ const playerSpriteSheet = {
   aliveLeft: {
     url: 'assets/images/player_rifle_left.png',
     name: 'left',
-    frameHeight: 100,
-    frameWidth: 100,
+    frameHeight: 55,
+    frameWidth: 93,
     currentFrame: 0,
     totalFrames: 1,
+    // hitBoxHeightOffset:
+    // hitBoxWidthOffset:
     once: true,
     fps: 250,
     fpsX: 1,
@@ -39,8 +41,8 @@ const playerSpriteSheet = {
   aliveUp: {
     url: 'assets/images/player_rifle_up.png',
     name: 'up',
-    frameHeight: 100,
-    frameWidth: 100,
+    frameHeight: 93,
+    frameWidth: 55,
     currentFrame: 0,
     totalFrames: 1,
     once: true,
@@ -50,8 +52,8 @@ const playerSpriteSheet = {
   aliveRight: {
     url: 'assets/images/player_rifle.png',
     name: 'right',
-    frameHeight: 100,
-    frameWidth: 100,
+    frameHeight: 55,
+    frameWidth: 93,
     currentFrame: 0,
     totalFrames: 1,
     once: true,
@@ -61,8 +63,8 @@ const playerSpriteSheet = {
   aliveDown: {
     url: 'assets/images/player_rifle_down.png',
     name: 'down',
-    frameHeight: 100,
-    frameWidth: 100,
+    frameHeight: 93,
+    frameWidth: 55,
     currentFrame: 0,
     totalFrames: 1,
     once: true,

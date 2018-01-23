@@ -19,6 +19,17 @@ class Monster {
     this.interval = null;
     this.counter = 0;
     this.finalPlayerPos = [];
+    this.centerCoords = [0, 0];
+    this.randCount = 200;
+  }
+
+  setCenterCoords () {
+    let x = this.coordinates[0] +
+      (this.currentSprite.frameWidth / 2);
+    let y = this.coordinates[1] +
+      (this.currentSprite.frameHeight / 2);
+
+    return [x, y];
   }
 
   defeated () {
@@ -63,6 +74,8 @@ class Monster {
   }
 
   findDirectionVector (playerPos) {
+    // debugger
+    // let monsterCenterPos = this.setCenterCoords();
     let x = playerPos[0] - this.coordinates[0];
     let y = playerPos[1] - this.coordinates[1];
     return [x, y];
@@ -76,7 +89,7 @@ class Monster {
     return [(playerDir[0]/magnitude), (playerDir[1]/magnitude)];
   }
 
-  chasePlayer (playerPos, delta) {
+  chasePlayer (delta) {
       let playerDir = this.findDirectionVector(this.finalPlayerPos);
       let magnitude = this.findMagnitude(playerDir[0], playerDir[1]);
       let normalized = this.normalizeVector(playerDir, magnitude);
@@ -88,8 +101,13 @@ class Monster {
         velocity * delta);
   }
 
+  randomCount() {
+    return (Math.random() * 200) + 180;
+  }
+
   handleIdle () {
-      if (this.counter === 200) {
+      if (this.counter >= 200) {
+
         if (this.targetPos[0] >= this.coordinates[0]) {
 
           this.currentSprite = monsterSprites.bite_e;
@@ -97,7 +115,7 @@ class Monster {
         } else {
           this.currentSprite = monsterSprites.bite_w;
           this.currentSprite.currentFrame = 0;
-        }
+          }
         this.counter = 0;
       }
   }
@@ -106,32 +124,35 @@ class Monster {
     // BINDS FINAL POSITION BEFORE BITE
     if (this.finalPlayerPos.length === 0) {
       this.finalPlayerPos = Object.assign([], this.targetPos);
+      clearInterval(this.interval);
     }
 
-    if (this.coordinates[0] <= this.finalPlayerPos[0] +50){
+    if (this.coordinates[0] <= this.finalPlayerPos[0]){
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
       // this.coordinates = [this.finalPlayerPos[0] + 50, this.finalPlayerPos[1] - ];
       this.finalPlayerPos = [];
       this.targetPos = [];
     } else if (this.coordinates[0] >= this.finalPlayerPos[0]) {
-      this.chasePlayer(this.finalPlayerPos, delta);
+      this.chasePlayer(delta);
     }
   }
 
   handleBiteEast (delta) {
     if (this.finalPlayerPos.length === 0) {
       this.finalPlayerPos = Object.assign([], this.targetPos);
+      clearInterval(this.interval);
     }
 
-    if (this.coordinates[0] >= this.finalPlayerPos[0] -50){
+    if ((this.coordinates[0] + this.currentSprite.frameWidth / 4) >=
+    this.finalPlayerPos[0]){
       this.currentSprite = monsterSprites.idle;
       this.currentSprite.currentFrame = 0;
       // this.coordinates = [this.finalPlayerPos[0] -10, this.finalPlayerPos[1]];
       this.finalPlayerPos = [];
       this.targetPos = [];
     } else if (this.coordinates[0] <= this.finalPlayerPos[0]) {
-      this.chasePlayer(this.finalPlayerPos, delta);
+      this.chasePlayer(delta);
     }
   }
 
@@ -144,8 +165,11 @@ class Monster {
     if (this.targetPos.length === 0) {
       this.interval = setInterval(() => {
           this.targetPos = Object.assign([], playerPos);
-      }, 1000);
+      }, 250);
   }
+
+
+
     // OFFSET FOR IDLE ANIMATION
     this.counter = this.counter || 0;
 

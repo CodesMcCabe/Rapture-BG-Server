@@ -3,15 +3,22 @@ NEEDED:
 - LINKS
 - CREATED BY
 - ARTIST CREDITS
-3) Fix monster screen boundry
+3) Fix monster screen boundry [should be fine if can move above canvas]
 4) Fix Monster death animation, should stop after one animation
-5) Animate Player death
 6) Throttle amt of bullets rendered
 8) monster spawn little worms
 9) Game Timer
 10) monster shoot on idle
+11) SpaceBar || enter to start game
 
 // Fully functional fun game if above is complete
+
+// MAKE HARDER
+
+- randomize time at which charge occurs, need to offset with fps increase/decrease to compensate for animation
+
+- add additional attacks
+
 
 - game continues in background when gameover
 - game startes with player able to move around, doesnt start until shoot pile or get near
