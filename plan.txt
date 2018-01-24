@@ -1,9 +1,7 @@
 NEEDED:
-- INSTRUCTIONS
-- LINKS
 - CREATED BY
 - ARTIST CREDITS
-3) Fix monster screen boundry [should be fine if can move above canvas]
+3) Adjust Difficulty
 4) Fix Monster death animation, should stop after one animation
 5) Sound
 6) Throttle amt of bullets rendered
