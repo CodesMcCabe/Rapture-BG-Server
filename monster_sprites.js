@@ -1,5 +1,5 @@
 let Sprite = require('./sprite');
-
+// IF BLANK RENDER BEFORE SPRITE, NEED TO RESET SHIFT TO 0!!
 const monsterSpriteSheet = {
   dirt: {
     url: 'assets/images/worm_intro.png',
@@ -58,7 +58,7 @@ const monsterSpriteSheet = {
     totalFrames: 5,
     once: false,
     fps: 200,
-    fpsX: 1,
+    fpsX: 1.5,
   },
 
   dead: {
@@ -70,7 +70,7 @@ const monsterSpriteSheet = {
     totalFrames: 4,
     once: true,
     fps: 200,
-    fpsX: 1.5,
+    fpsX: 1,
   }
 };
 

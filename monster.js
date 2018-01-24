@@ -10,7 +10,7 @@ class Monster {
     this.coordinates = [700, 300];
     this.currentSprite = sprite;
     this.shift = 0;
-    this.health = 500;
+    this.health = 10;
     this.alive = true;
     this.lastUpdate = Date.now();
     this.gameOver = false;
@@ -21,6 +21,7 @@ class Monster {
     this.finalPlayerPos = [];
     this.centerCoords = [0, 0];
     this.randCount = 200;
+    this.pauseAnimation = false;
   }
 
   setCenterCoords () {
@@ -51,29 +52,39 @@ class Monster {
       this.currentSprite.frameWidth, this.currentSprite.frameHeight,
       this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
       this.currentSprite.frameHeight);
+    if (!this.pauseAnimation) {
 
-    let fps = this.currentSprite.fps * this.currentSprite.fpsX;
-    if (now - this.lastUpdate > fps)  {
-      this.currentSprite.fps = fps;
-      this.lastUpdate = now;
-      this.shift = this.currentSprite.currentFrame *
-      this.currentSprite.frameWidth;
+      let fps = this.currentSprite.fps * this.currentSprite.fpsX;
+      if (now - this.lastUpdate > fps)  {
+        this.currentSprite.fps = fps;
+        this.lastUpdate = now;
+        this.shift = this.currentSprite.currentFrame *
+        this.currentSprite.frameWidth;
 
-      if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
-        this.currentSprite.name === 'intro') {
+        if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
+          this.currentSprite.name === 'intro') {
 
-        this.coordinates = [this.coordinates[0] - 15, this.coordinates[1] + 15];
-        this.currentSprite = monsterSprites.idle;
-        this.shift = 0;
-        this.currentSprite.currentFrame = 0;
+            this.coordinates = [this.coordinates[0] - 15, this.coordinates[1] + 15];
+            this.currentSprite = monsterSprites.idle;
+            this.shift = 0;
+            this.currentSprite.currentFrame = 0;
 
-      } else if (this.currentSprite.currentFrame ===
-        this.currentSprite.totalFrames) {
+          } else if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
+            this.currentSprite.name === 'dead') {
+              this.currentSprite.currentFrame = 2;
+              this.shift = this.currentSprite.currentFrame *
+              this.currentSprite.frameWidth;
+              // debugger
+              this.pauseAnimation = true;
 
-        this.shift = 0;
-        this.currentSprite.currentFrame = 0;
-      }
-      this.currentSprite.currentFrame += 1;
+            } else if (this.currentSprite.currentFrame ===
+              this.currentSprite.totalFrames) {
+
+                this.shift = 0;
+                this.currentSprite.currentFrame = 0;
+              }
+              this.currentSprite.currentFrame += 1;
+            }
     }
   }
 
@@ -175,9 +186,11 @@ class Monster {
   }
 
   update(playerPos, dt, delta) {
-    if (!this.alive) {
+    if (!this.alive && !this.gameOver) {
+      this.gameOver = true;
       this.currentSprite = monsterSprites.dead;
-      return null;
+      this.shift = 0;
+      // this.currentSprite.currentFrame = 0;
     }
     // TRACKS POSITION OF PLAYER
     if (this.targetPos.length === 0 ) {
