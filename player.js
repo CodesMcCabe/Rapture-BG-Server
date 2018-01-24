@@ -29,6 +29,8 @@ class Player {
   render(now) {
     var playerSprite = new Image();
     playerSprite.src = this.currentSprite.url;
+
+    // playerSprite.addEventListener
     this.ctx.drawImage(playerSprite, this.shift, 0,
       this.currentSprite.frameWidth, this.currentSprite.frameHeight,
       this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,

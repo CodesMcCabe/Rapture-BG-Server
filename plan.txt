@@ -5,11 +5,14 @@ NEEDED:
 - ARTIST CREDITS
 3) Fix monster screen boundry [should be fine if can move above canvas]
 4) Fix Monster death animation, should stop after one animation
+5) Sound
 6) Throttle amt of bullets rendered
 8) monster spawn little worms
 9) Game Timer
 10) monster shoot on idle
 11) SpaceBar || enter to start game
+12) preload assets so not glitchy on first play online
+
 
 // Fully functional fun game if above is complete
 

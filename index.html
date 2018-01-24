@@ -5,10 +5,11 @@
     <title>Rapture-BG</title>
     <script src="bundle.js"></script>
     <link rel="stylesheet" href="assets/stylesheets/background.css">
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
     <style>
-
     	* { padding: 0; margin: 0; }
-    	canvas {background: url('assets/images/bg_final.png'); display: block; margin: auto; z-index: 1; border-radius: 25px;}
+    	canvas {background: url('assets/images/bg_final.png'); display: inline;  z-index: 1; border-radius: 25px; margin: auto;}
     </style>
   </head>
   <body>
@@ -16,10 +17,42 @@
       <img class="welcome_sign" src="assets/images/background/welcome_sign.png"/>
     </header>
     <div class="canvas_container">
-      <canvas class="canvas" id="canvas" width="1535" height="770">
-      </canvas>
+      <div class="canvas_two_container">
+        <div class="left_sidebar_links_container">
+          <ul class="left_sidebar_links">
+            <li class='move_text'>Move</li>
+            <li>
+              <img class="keys" src="assets/images/arrows_pop.png">
+            </li>
+            <li>Fire</li>
+            <li>
+              <img class="spacebar"     src="assets/images/spacebar.png">
+            </li>
+          </ul>
+        </div>
+        <canvas class="canvas" id="canvas" width="1535" height="770">
+        </canvas>
+        <div class="sidebar_links_container">
+          <ul class="sidebar_links">
+            <li>
+              <a href="http://www.mccabe.codes/"><img class="globe" src="assets/images/globe.png"></a>
+            </li>
+            <li>
+              <a href="https://github.com/Roots2D"><img class="github" src="assets/images/github-original.png"></a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/cody-mccabe-114385b0/"><img class="linkedin" src="assets/images/linkedin_logo.png"></a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
       <div class="start_screen">
-        <img id="start" class="start_button" src='assets/images/start_button.png'/>
+        <button id="start" class="start_button" type="button" name="button">Press Start</button>
+        <!-- <div id='start' class="start_button">
+          Test!!!
+        </div> -->
+        <!-- <img id="start" class="start_button" src='assets/images/start_button.png'/> -->
       </div>
       <div class="gameover_screen">
         <img id="game_over" class="restart_button" src="assets/images/game_over_again.jpg">
