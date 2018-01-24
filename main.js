@@ -98,6 +98,8 @@ window.onload = function() {
         gameOver.addEventListener('click', function(e) {
           clearTimeout(timeout);
           gameOver.style.display = 'none';
+          monsterSprites.dead.currentFrame = 0;
+          monsterSprites.idle.currentFrame = 0;
           player.currentSprite.currentFrame = 0;
           monsterSprites.intro.currentFrame = 0;
           restartGame();

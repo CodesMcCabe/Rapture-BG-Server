@@ -67,7 +67,7 @@ class Monster {
             this.coordinates = [this.coordinates[0] - 15, this.coordinates[1] + 15];
             this.currentSprite = monsterSprites.idle;
             this.shift = 0;
-            this.currentSprite.currentFrame = 0;
+            // this.currentSprite.currentFrame = 0;
 
           } else if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
             this.currentSprite.name === 'dead') {

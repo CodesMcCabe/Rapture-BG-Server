@@ -1,7 +1,8 @@
-body {
-  background: url("../images/background/cave_blue.jpg");
+html {
+  background: url("../images/background/cave_blue.jpg") no-repeat;
   background-size: cover;
-  display: inline;
+  /* display: inline; */
+  object-fit: cover;
 }
 
 header {
@@ -31,7 +32,7 @@ button:focus {
 }
 
 .start_button {
-  background-color: red;
+  background-color: #32cd32;
   border: 5px solid black;
   cursor: pointer;
   border-radius: 15px;
@@ -49,60 +50,76 @@ button:focus {
 }
 .left_sidebar_links {
   list-style: none;
-  width: 90px;
-  height: 160px;
-  margin-left: 31px;
+  width: 90%;
+  /* height: 160px; */
+  /* margin-left: 31px; */
   font-family: 'Orbitron', sans-serif;
   font-weight: bold;
   font-size: 20px;
   color: #fff;
   text-decoration:underline;
   text-align: center;
+  /* margin-top: 50%; */
+  /* margin-left: 10%; */
 }
 
-.left_sidebar_links > li {
+.left_sidebar_links li {
+  width: 80%;
 }
 
-.sidebar_links > li {
-  margin-top: 140px;
-  margin-bottom: 140px;
+.sidebar_links li {
+  /* margin-top: 50%; */
+  /* margin-bottom:  */
 }
 
 .sidebar_links_container {
   display: flex;
+  width: 9.5vw;
+  /* margin-bottom: auto; */
+  margin-top: 5%;
+  justify-content: center;
+  /* margin-bottom: 10%; */
+  /* height: auto; */
+  /* margin: auto; */
+}
+
+.sidebar_links_container li {
+  padding-bottom: 250%;
 }
 
 .left_sidebar_links_container {
   display: flex;
+  width: 9.5vw;
+  /* margin-bottom: auto; */
+  margin-top: 5%;
+  justify-content: center;
 }
 
 img.globe {
-  width: 51px;
+  width: 100%;
 }
 
 li.move_text {
-  margin-bottom: 0;
-  margin-top: 140px;
+  /* width: 100%; */
 }
 
-img.keys {
-  width: 100px;
+.keys {
+  width: 100%;
   margin-top: 0;
   margin-bottom: 140px;
-
 }
 
 img.spacebar {
-  width: 100px;
+  width: 100%;
 }
 
 img.github {
-  width: 51px;
+  width: 100%;
 }
 
 img.linkedin {
   padding-bottom: 0;
-  width: 51px;
+  width: 100%;
 
 }
 
@@ -131,7 +148,7 @@ img.linkedin {
 
 
 .welcome_sign {
-  width: 40%;
+  width: 40vw;
   margin: 0;
   align-self: center;
   background-size: cover;
@@ -141,6 +158,12 @@ img.linkedin {
 }
 
 .canvas {
+  /* background: url('assets/images/bg_final.png'); */
+  width: 81vw;
+  height: auto;
+  min-width: 800px;
+  /* height: 82vh; */
+  background-size: contain;
   position: relative;
   -webkit-box-shadow: inset 0px 0px 35px 3px rgba(0,0,0,0.67);
   -moz-box-shadow: 0px 0px 35px 3px rgba(0,0,0,0.67);
