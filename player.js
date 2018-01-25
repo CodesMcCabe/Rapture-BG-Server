@@ -100,6 +100,7 @@ class Player {
     const spriteHeight = 125;
     this.setHitBox(this.facingPos);
     let speed = 12;
+    // key.preventDefault();
 
     if (this.alive) {
       if(this.keyPressed[37]) {

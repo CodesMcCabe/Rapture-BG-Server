@@ -17,12 +17,23 @@ window.onload = function() {
   let myReq;
   preloadAssets();
 
-  function startGame () {
+  function hoverSound () {
 
+  }
+
+  function startGame () {
     let start = document.getElementById('start');
+
     start.addEventListener('click', function(e) {
         start.className = 'start_button_hide';
         gameStart = true;
+    });
+
+    let audio = document.getElementById('audio_hover');
+    audio.volume = 0.4;
+    start.addEventListener('mouseover', function(evt) {
+      audio.load();
+      audio.play();
     });
   }
 
@@ -39,6 +50,13 @@ window.onload = function() {
     let timeout = setTimeout(() => {
       gameOver.style.display = 'block';
     }, 2000);
+
+    let audio = document.getElementById('audio_hover');
+    audio.volume = 0.4;
+    gameOver.addEventListener('mouseover', function(evt) {
+      audio.load();
+      audio.play();
+    });
 
     gameOver.addEventListener('click', function(e) {
       clearTimeout(timeout);
@@ -116,8 +134,8 @@ window.onload = function() {
     if (playerX < monsterX + monster.currentSprite.frameWidth - mHBoffset&&
       playerX + player.hitBoxW > monsterX + mHBoffset&&
       playerY < monsterY + monster.currentSprite.frameHeight - mHBoffset&&
-      playerY + player.hitBoxH > monsterY + mHBoffset&&
-      monster.alive) {
+      playerY + player.hitBoxH > monsterY + mHBoffset &&
+      gameStart) {
         player.dead();
         monster.playerDefeated();
         gameOverPrompt();
@@ -164,8 +182,12 @@ window.onload = function() {
   }
 
   document.onkeydown = function (evt) {
-    evt.preventDefault();
+    let keys = [32, 37, 38, 39, 40];
     key = evt.which;
+    if(keys.includes(key)) {
+      evt.preventDefault();
+    }
+    // key.preventDefault();
     player.keyPressed[key] = true;
     if (key === 32 && player.alive && allowFire) {
       shoot(player.currentPosition());
