@@ -41,8 +41,8 @@ class Monster {
     this.gameOver = true;
   }
 
-  reduceHealth (bullet) {
-    this.health -= bullet.damage;
+  reduceHealth (damage) {
+    this.health -= damage;
   }
 
   render(now) {
@@ -74,7 +74,6 @@ class Monster {
               this.currentSprite.currentFrame = 2;
               this.shift = this.currentSprite.currentFrame *
               this.currentSprite.frameWidth;
-              // debugger
               this.pauseAnimation = true;
 
             } else if (this.currentSprite.currentFrame ===
@@ -89,8 +88,6 @@ class Monster {
   }
 
   findDirectionVector () {
-    // debugger
-    // let monsterCenterPos = this.setCenterCoords();
     let x = this.finalPlayerPos[0] - this.coordinates[0];
     let y = this.finalPlayerPos[1] - this.coordinates[1];
     return [x, y];

@@ -1,7 +1,8 @@
 class Bullet {
-  constructor(playerAttr, canvasW, canvasH, ctx) {
+  constructor(playerAttr, canvasW, canvasH, ctx, sprite) {
     // create bounding box attributes
     // set heigh and width attributs for each which will simulate the hitbox
+    this.currentSprite = sprite;
     this.active = true;
     this.playerPos = Object.assign([], playerAttr.playerPos);
     this.playerFace = playerAttr.playerFace;
@@ -9,13 +10,6 @@ class Bullet {
     this.canvasW = canvasW;
     this.canvasH = canvasH;
     this.ctx = ctx;
-    this.currentSprite = 'assets/images/bullet_horz.png';
-    this.damage = 10;
-    // USED FOR HITBOX
-    // WILL HAVE TO SWAP DEPENING ON DIRECTION OR JUST USE ELSEWHERE
-    this.height = 6;
-    this.width = 14;
-
 
     this.setCoordinates = this.setCoordinates.bind(this);
     this.setHitBox = this.setHitBox.bind(this);
@@ -23,27 +17,27 @@ class Bullet {
 
   render () {
     var bulletSprite = new Image();
-    bulletSprite.src = this.currentSprite;
+    bulletSprite.src = this.currentSprite.url;
     this.ctx.drawImage(bulletSprite, this.coordinates[0], this.coordinates[1]);
   }
 
   setHitBox (playerFace) {
     switch (playerFace) {
       case "left":
-        this.height = 6;
-        this.width = 14;
+        this.currentSprite.frameHeight = 6;
+        this.currentSprite.frameWidth = 14;
         break;
       case "up":
-        this.height = 14;
-        this.width = 6;
+        this.currentSprite.frameHeight = 14;
+        this.currentSprite.frameWidth = 6;
         break;
       case "right":
-        this.height = 6;
-        this.width = 14;
+        this.currentSprite.frameHeight = 6;
+        this.currentSprite.frameWidth = 14;
         break;
       case "down":
-        this.height = 14;
-        this.width = 6;
+        this.currentSprite.frameHeight = 14;
+        this.currentSprite.frameWidth = 6;
         break;
       default:
         return playerFace;
@@ -63,7 +57,6 @@ class Bullet {
         x += 40;
         y += 5;
         return [x, y];
-        // return [playerPos[0], playerPos[1]];
       case "right":
         x += 75;
         y += 40;
@@ -79,32 +72,46 @@ class Bullet {
   }
 
   update(dt) {
-    // this.setCoordinates(this.playerPos);
-
-    if (this.playerFace === "left") {
-      this.currentSprite = 'assets/images/bullet_horz.png';
-      this.coordinates[0]-= (800 * dt);
-      this.active = this.active && this.coordinates[0] >= 0;
-    }
-
-    if (this.playerFace === "up") {
-      this.currentSprite = 'assets/images/bullet_vert.png';
-      this.coordinates[1]-= (800 * dt);
-      this.active = this.active && this.coordinates[1] >= 0;
-    }
-
-    if (this.playerFace === "right") {
-      this.currentSprite = 'assets/images/bullet_horz.png';
-      this.coordinates[0]+= (800 * dt);
-      this.active = this.active && this.coordinates[0] <= this.canvasW;
-    }
-
-    if (this.playerFace === "down") {
-      this.currentSprite = 'assets/images/bullet_vert.png';
-      this.coordinates[1]+= (800 * dt);
-      this.active = this.active && this.coordinates[1] <= this.canvasH;
+    switch (this.playerFace) {
+      case 'left':
+        this.currentSprite.url = 'assets/images/bullet_horz.png';
+        this.coordinates[0]-= (800 * dt);
+        this.active = this.active && this.coordinates[0] >= 0;
+        break;
+      case 'up':
+        this.currentSprite.url = 'assets/images/bullet_vert.png';
+        this.coordinates[1]-= (800 * dt);
+        this.active = this.active && this.coordinates[1] >= 0;
+        break;
+      case 'right':
+        this.currentSprite.url = 'assets/images/bullet_horz.png';
+        this.coordinates[0]+= (800 * dt);
+        this.active = this.active && this.coordinates[0] <= this.canvasW;
+        break;
+      case 'down':
+        this.currentSprite.url = 'assets/images/bullet_vert.png';
+        this.coordinates[1]+= (800 * dt);
+        this.active = this.active && this.coordinates[1] <= this.canvasH;
+        break;
     }
   }
+    // if (this.playerFace === "left") {
+    //   this.currentSprite = 'assets/images/bullet_horz.png';
+    //   this.coordinates[0]-= (800 * dt);
+    //   this.active = this.active && this.coordinates[0] >= 0;
+    // }
+    //
+    // if (this.playerFace === "up") {
+    //   this.currentSprite = 'assets/images/bullet_vert.png';
+    //   this.coordinates[1]-= (800 * dt);
+    //   this.active = this.active && this.coordinates[1] >= 0;
+    // }
+    //
+    // if (this.playerFace === "right") {
+    // }
+    //
+    // if (this.playerFace === "down") {
+    // }
 }
 
 

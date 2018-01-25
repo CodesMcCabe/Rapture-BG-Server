@@ -1,6 +1,7 @@
 let Board = require('./board');
 let monsterSprites = require('./monster_sprites');
 let playerSprites = require('./player_sprites');
+let bulletSprites = require('./bullet_sprites');
 let Sprite = require('./sprite');
 let Monster = require('./monster');
 let Player = require('./player');
@@ -14,24 +15,14 @@ window.onload = function() {
   let gameOverSprite = 'assets/images/game_over.png';
   let myReq;
 
-  // function setStartButton () {
-  //   debugger
-  //   let button = document.getElementsByTagName('img')[0];
-  //   button.addEventListener('click', function(e) {
-  //     requestAnimationFrame( main );
-  //   });
-  // }
-
   function startGame () {
 
     let start = document.getElementById('start');
     start.addEventListener('click', function(e) {
-          start.className = 'start_button_hide';
-          gameStart = true;
-      });
-    }
-
-
+        start.className = 'start_button_hide';
+        gameStart = true;
+    });
+  }
 
   function restartGame () {
     let gameOver = document.getElementById('game_over');
@@ -65,13 +56,14 @@ window.onload = function() {
 
     if (gameStart) {
       bullets.forEach(bullet => {
+        // debugger
         bulletX = bullet.coordinates[0];
         bulletY = bullet.coordinates[1];
         if (bulletX < monsterX + monster.currentSprite.frameWidth - mHBoffset &&
-          bulletX + bullet.width > monsterX + mHBoffset &&
+          bulletX + bullet.currentSprite.frameWidth > monsterX + mHBoffset &&
           bulletY < monsterY + monster.currentSprite.frameHeight - mHBoffset &&
-          bulletY + bullet.height > monsterY + mHBoffset) {
-            monster.reduceHealth(bullet);
+          bulletY + bullet.currentSprite.frameHeight > monsterY + mHBoffset) {
+            monster.reduceHealth(bullet.currentSprite.damage);
             bullets.splice(0, 1);
 
             if (monster.health <= 0) {
@@ -116,10 +108,9 @@ window.onload = function() {
   }
 
   function shoot (playerPos) {
-
     if (allowFire) {
       bullets.push(new Bullet(playerPos, canvas.width,
-        canvas.height, ctx));
+        canvas.height, ctx, bulletSprites.rifle));
         bullets = bullets.filter(bullet => bullet.active);
     }
 
