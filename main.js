@@ -129,16 +129,14 @@ window.onload = function() {
     allowFire = false;
     setTimeout(() => {
       allowFire = true;
-    }, 250);
+    }, 200);
   }
 
   function shoot (playerPos) {
-    if (allowFire) {
       bullets.push(new Bullet(playerPos, canvas.width,
         canvas.height, ctx, bulletSprites.rifle));
 
       bullets = bullets.filter(bullet => bullet.active);
-    }
 
     Fire();
   }
@@ -166,14 +164,16 @@ window.onload = function() {
   }
 
   document.onkeydown = function (evt) {
+    evt.preventDefault();
     key = evt.which;
     player.keyPressed[key] = true;
-    if (key === 32 && player.alive) {
+    if (key === 32 && player.alive && allowFire) {
       shoot(player.currentPosition());
     }
   };
 
   document.onkeyup = function(evt) {
+    evt.preventDefault();
     player.keyPressed[evt.which] = false;
     key = null;
   };

@@ -1,7 +1,6 @@
 html {
   background: url("../images/background/cave_blue.jpg") no-repeat;
   background-size: cover;
-  /* display: inline; */
   object-fit: cover;
 }
 
@@ -16,6 +15,7 @@ header {
   z-index: 1;
   left: 45%;
   top: 40%;
+  width: 13%;
 }
 
 .start_button:hover {
@@ -32,14 +32,43 @@ button:focus {
 }
 
 .start_button {
-  background-color: #7ea228;
+  width: 100%;
+  background-color: #2a445d;
   border: 5px solid black;
   cursor: pointer;
   border-radius: 15px;
   padding: 10px;
   text-align: center;
   font-family: 'Orbitron', sans-serif;
-  font-size: 32px;
+  font-size: 1.75vw;
+  color: #ff1493;
+}
+
+.gameover_screen {
+  position: absolute;
+  z-index: 1;
+  left: 45%;
+  top: 40%;
+  width: 13%;
+}
+
+.restart_button:hover {
+  background-color: #fff;
+}
+
+.restart_button {
+  display: none;
+  left: 30%;
+  background-color: #2a445d;
+  border: 5px solid black;
+  cursor: pointer;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75vw;
+  /* font-weight: bold; */
+  color: #ff1493;
 }
 
 .sidebar_links {
@@ -51,16 +80,12 @@ button:focus {
 .left_sidebar_links {
   list-style: none;
   width: 90%;
-  /* height: 160px; */
-  /* margin-left: 31px; */
   font-family: 'Orbitron', sans-serif;
   font-weight: bold;
   font-size: 20px;
   color: #fff;
   text-decoration:underline;
   text-align: center;
-  /* margin-top: 50%; */
-  /* margin-left: 10%; */
 }
 
 .left_sidebar_links li {
@@ -68,29 +93,22 @@ button:focus {
 }
 
 .sidebar_links li {
-  /* margin-top: 50%; */
-  /* margin-bottom:  */
 }
 
 .sidebar_links_container {
   display: flex;
   width: 9.5vw;
-  /* margin-bottom: auto; */
   margin-top: 5%;
   justify-content: center;
-  /* margin-bottom: 10%; */
-  /* height: auto; */
-  /* margin: auto; */
 }
 
 .sidebar_links_container li {
-  padding-bottom: 250%;
+  /* padding-bottom: 250%; */
 }
 
 .left_sidebar_links_container {
   display: flex;
   width: 9.5vw;
-  /* margin-bottom: auto; */
   margin-top: 5%;
   justify-content: center;
 }
@@ -100,13 +118,14 @@ img.globe {
 }
 
 li.move_text {
-  /* width: 100%; */
 }
 
 .keys {
   width: 100%;
   margin-top: 0;
-  margin-bottom: 140px;
+  /* padding-top: 5vh; */
+  padding-bottom: 5vh;
+  /* margin-bottom: 140px; */
 }
 
 img.spacebar {
@@ -114,6 +133,8 @@ img.spacebar {
 }
 
 img.github {
+  padding-top: 5vh;
+  padding-bottom: 5vh;
   width: 100%;
 }
 
@@ -123,22 +144,10 @@ img.linkedin {
 
 }
 
-.gameover_screen {
-  position: absolute;
-  z-index: 1;
-  left: 35%;
-  top: 30%;
-
-}
-
-.restart_button {
-  display: none;
-  cursor: pointer;
-  left: 30%;
-}
 
 .canvas_two_container {
   display: flex;
+  height: 100%;
 }
 
 
@@ -158,11 +167,9 @@ img.linkedin {
 }
 
 .canvas {
-  /* background: url('assets/images/bg_final.png'); */
   width: 81vw;
   height: auto;
   min-width: 800px;
-  /* height: 82vh; */
   background-size: contain;
   position: relative;
   -webkit-box-shadow: inset 0px 0px 35px 3px rgba(0,0,0,0.67);

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
     <style>
     	* { padding: 0; margin: 0; }
-    	canvas {background: url('assets/images/bg_final.png'); display: inline;  z-index: 1; border-radius: 25px; margin-top: 0; margin-left: auto; margin-right: 0; margin-bottom: auto;}
+    	canvas {background: url('assets/images/bg_final.png'); display: inline;  z-index: 1; border-radius: 25px; margin-top: 0; margin-left: auto; margin-right: 0; margin-bottom: 0;}
     </style>
   </head>
   <body>
@@ -33,8 +33,17 @@
             </li>
           </ul>
         </div>
-        <canvas class="canvas" id="canvas" width="1535" height="770">
-        </canvas>
+        <div class="">
+          <canvas class="canvas" id="canvas" width="1535" height="770">
+          </canvas>
+          <div class="start_screen">
+            <button id="start" class="start_button" type="button" name="button">Press Start</button>
+          </div>
+          <div class="gameover_screen">
+            <button id="game_over"class="restart_button" type="button" name="button">Play again?</button>
+            <!-- <img id="game_over" class="restart_button" src="assets/images/game_over_again.jpg"> -->
+          </div>
+        </div>
         <div class="sidebar_links_container">
           <ul class="sidebar_links">
             <li>
@@ -49,16 +58,6 @@
           </ul>
 
         </div>
-      </div>
-      <div class="start_screen">
-        <button id="start" class="start_button" type="button" name="button">Press Start</button>
-        <!-- <div id='start' class="start_button">
-          Test!!!
-        </div> -->
-        <!-- <img id="start" class="start_button" src='assets/images/start_button.png'/> -->
-      </div>
-      <div class="gameover_screen">
-        <img id="game_over" class="restart_button" src="assets/images/game_over_again.jpg">
       </div>
     </div>
     <footer>

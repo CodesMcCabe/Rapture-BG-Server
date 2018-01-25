@@ -1,4 +1,9 @@
 NEEDED:
+1) Prevent default scroll
+2) Add win restart modal
+3) Add sound
+4) Add game timer
+
 - CREATED BY [PRIORITY]
 - ARTIST CREDITS
 5) Sound [PRIORITY]
