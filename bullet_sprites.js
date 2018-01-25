@@ -10,15 +10,11 @@ const bulletSpriteSheet = {
   },
 
   monster: {
-    url: 'assets/images/worm_intro.png',
-    name: 'intro',
-    frameHeight: 166,
-    frameWidth: 153,
-    currentFrame: 0,
-    totalFrames: 16,
-    once: true,
-    fps: 250,
-    fpsX: 1,
+    url: 'assets/images/bullet_horz.png',
+    name: 'rifle',
+    frameHeight: 6,
+    frameWidth: 14,
+    damage: 10,
   },
 };
 

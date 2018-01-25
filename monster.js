@@ -1,5 +1,6 @@
-// MONSTER WILL CHASE PLAYER, TAKE SHORTEST ROUTE IF POSSIBLE
 let monsterSprites = require('./monster_sprites');
+let bulletSprites = require('./bullet_sprites');
+let Bullet = require('./bullet');
 let Sprite = require('./sprite');
 
 class Monster {
@@ -22,6 +23,8 @@ class Monster {
     this.centerCoords = [0, 0];
     this.randCount = 200;
     this.pauseAnimation = false;
+    this.bullets = [];
+    this.bulletsLoaded = false;
   }
 
   setCenterCoords () {
@@ -61,15 +64,17 @@ class Monster {
         this.shift = this.currentSprite.currentFrame *
         this.currentSprite.frameWidth;
 
-        if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
+        if (this.currentSprite.currentFrame ===
+          this.currentSprite.totalFrames &&
           this.currentSprite.name === 'intro') {
 
-            this.coordinates = [this.coordinates[0] - 15, this.coordinates[1] + 15];
+            this.coordinates = [this.coordinates[0] - 15,
+            this.coordinates[1] + 15];
             this.currentSprite = monsterSprites.idle;
             this.shift = 0;
-            // this.currentSprite.currentFrame = 0;
 
-          } else if (this.currentSprite.currentFrame === this.currentSprite.totalFrames &&
+          } else if (this.currentSprite.currentFrame ===
+            this.currentSprite.totalFrames &&
             this.currentSprite.name === 'dead') {
               this.currentSprite.currentFrame = 2;
               this.shift = this.currentSprite.currentFrame *
@@ -117,8 +122,25 @@ class Monster {
     return (Math.random() * 200) + 180;
   }
 
+  bulletAttack () {
+    let i = 8;
+    while (i > 0) {
+      let bulletCount = i;
+      this.bullets.push(new Bullet(this.coordinates, this.canvasW,
+        this.canvasH, this.ctx, bulletSprites.monster, bulletCount));
+      i--;
+    }
+    this.bulletsLoaded = true;
+    this.bullets.filter(bullet => bullet.active);
+    console.log(this.bullets.length);
+  }
+
   handleIdle () {
+      if (!this.bulletsLoaded) {
+        this.bulletAttack();
+      }
       if (this.counter >= 200 && !this.gameOver) {
+        this.bulletsLoaded = false;
 
         if (this.targetPos[0] >= this.coordinates[0]) {
 
@@ -149,7 +171,6 @@ class Monster {
           this.coordinates[0] = this.finalPlayerPos[0];
         }
       this.currentSprite.currentFrame = 0;
-      // this.coordinates = [this.finalPlayerPos[0] + 50, this.finalPlayerPos[1] - ];
       this.finalPlayerPos = [];
       this.targetPos = [];
     } else if (this.coordinates[0] >= this.finalPlayerPos[0]) {
@@ -163,7 +184,8 @@ class Monster {
       if (this.targetPos[1] + this.currentSprite.frameHeight >= this.canvasH) {
         this.targetPos[1] = this.canvasH - this.currentSprite.frameHeight;
       }
-      this.finalPlayerPos = [this.canvasW - (this.canvasW - this.targetPos[0]), this.targetPos[1]];
+      this.finalPlayerPos = [this.canvasW -
+        (this.canvasW - this.targetPos[0]), this.targetPos[1]];
       clearInterval(this.interval);
     }
 
@@ -171,12 +193,12 @@ class Monster {
       this.currentSprite = monsterSprites.idle;
       if (this.coordinates[0] + this.currentSprite.frameWidth >=
         this.canvasW){
-          this.coordinates[0] = this.finalPlayerPos[0] - (this.canvasW - this.finalPlayerPos[0]);
+          this.coordinates[0] = this.finalPlayerPos[0] -
+          (this.canvasW - this.finalPlayerPos[0]);
         }
       this.currentSprite.currentFrame = 0;
       this.finalPlayerPos = [];
       this.targetPos = [];
-      // this.coordinates = [this.finalPlayerPos[0] -10, this.finalPlayerPos[1]];
     } else if (this.coordinates[0] <= this.finalPlayerPos[0]) {
       this.chasePlayer(delta);
     }
@@ -194,9 +216,7 @@ class Monster {
       this.interval = setInterval(() => {
           this.targetPos = Object.assign([], playerPos);
       }, 100);
-  }
-
-
+    }
 
     // OFFSET FOR IDLE ANIMATION
     this.counter = this.counter || 0;
@@ -213,8 +233,6 @@ class Monster {
         this.handleBiteEast(delta);
         break;
     }
-
-
   }
 }
 

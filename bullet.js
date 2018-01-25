@@ -1,7 +1,5 @@
 class Bullet {
-  constructor(playerAttr, canvasW, canvasH, ctx, sprite) {
-    // create bounding box attributes
-    // set heigh and width attributs for each which will simulate the hitbox
+  constructor(playerAttr, canvasW, canvasH, ctx, sprite, bulletCount) {
     this.currentSprite = sprite;
     this.active = true;
     this.playerPos = Object.assign([], playerAttr.playerPos);
@@ -10,6 +8,8 @@ class Bullet {
     this.canvasW = canvasW;
     this.canvasH = canvasH;
     this.ctx = ctx;
+    this.bulletCounter = 0;
+    this.bulletCount = bulletCount;
 
     this.setCoordinates = this.setCoordinates.bind(this);
     this.setHitBox = this.setHitBox.bind(this);
@@ -22,22 +22,24 @@ class Bullet {
   }
 
   setHitBox (playerFace) {
+    let dimensionsCopy = Object.assign([],
+      [this.currentSprite.frameWidth, this.currentSprite.frameHeight]);
     switch (playerFace) {
       case "left":
-        this.currentSprite.frameHeight = 6;
-        this.currentSprite.frameWidth = 14;
+        this.currentSprite.frameHeight = dimensionsCopy[1];
+        this.currentSprite.frameWidth = dimensionsCopy[0];
         break;
       case "up":
-        this.currentSprite.frameHeight = 14;
-        this.currentSprite.frameWidth = 6;
+        this.currentSprite.frameHeight = dimensionsCopy[0];
+        this.currentSprite.frameWidth = dimensionsCopy[1];
         break;
       case "right":
-        this.currentSprite.frameHeight = 6;
-        this.currentSprite.frameWidth = 14;
+        this.currentSprite.frameHeight = dimensionsCopy[1];
+        this.currentSprite.frameWidth = dimensionsCopy[0];
         break;
       case "down":
-        this.currentSprite.frameHeight = 14;
-        this.currentSprite.frameWidth = 6;
+        this.currentSprite.frameHeight = dimensionsCopy[0];
+        this.currentSprite.frameWidth = dimensionsCopy[1];
         break;
       default:
         return playerFace;
@@ -68,50 +70,38 @@ class Bullet {
       default:
         return playerPos;
     }
-
   }
 
-  update(dt) {
-    switch (this.playerFace) {
-      case 'left':
+  update(dt, owner) {
+
+    if (owner === 'player') {
+      switch (this.playerFace) {
+        case 'left':
         this.currentSprite.url = 'assets/images/bullet_horz.png';
         this.coordinates[0]-= (800 * dt);
         this.active = this.active && this.coordinates[0] >= 0;
         break;
-      case 'up':
+        case 'up':
         this.currentSprite.url = 'assets/images/bullet_vert.png';
         this.coordinates[1]-= (800 * dt);
         this.active = this.active && this.coordinates[1] >= 0;
         break;
-      case 'right':
+        case 'right':
         this.currentSprite.url = 'assets/images/bullet_horz.png';
         this.coordinates[0]+= (800 * dt);
         this.active = this.active && this.coordinates[0] <= this.canvasW;
         break;
-      case 'down':
+        case 'down':
         this.currentSprite.url = 'assets/images/bullet_vert.png';
         this.coordinates[1]+= (800 * dt);
         this.active = this.active && this.coordinates[1] <= this.canvasH;
         break;
+      }
+    } else {
+
+      // ORIENT MONSTER BULLETS
     }
   }
-    // if (this.playerFace === "left") {
-    //   this.currentSprite = 'assets/images/bullet_horz.png';
-    //   this.coordinates[0]-= (800 * dt);
-    //   this.active = this.active && this.coordinates[0] >= 0;
-    // }
-    //
-    // if (this.playerFace === "up") {
-    //   this.currentSprite = 'assets/images/bullet_vert.png';
-    //   this.coordinates[1]-= (800 * dt);
-    //   this.active = this.active && this.coordinates[1] >= 0;
-    // }
-    //
-    // if (this.playerFace === "right") {
-    // }
-    //
-    // if (this.playerFace === "down") {
-    // }
 }
 
 

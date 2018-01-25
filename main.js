@@ -38,6 +38,7 @@ window.onload = function() {
     monsterSprites.intro);
   let gameStart = false;
   let bullets = [];
+  let monsterBullets = monster.bullets;
   let player = new Player(ctx, canvas.width, canvas.height,
     playerSprites.aliveRight);
   let lastTime = Date.now();
@@ -68,8 +69,6 @@ window.onload = function() {
 
             if (monster.health <= 0) {
               monster.defeated();
-
-
             }
           }
         }
@@ -111,7 +110,8 @@ window.onload = function() {
     if (allowFire) {
       bullets.push(new Bullet(playerPos, canvas.width,
         canvas.height, ctx, bulletSprites.rifle));
-        bullets = bullets.filter(bullet => bullet.active);
+
+      bullets = bullets.filter(bullet => bullet.active);
     }
 
     Fire();
@@ -124,7 +124,8 @@ window.onload = function() {
     if (gameStart) {
       monster.update(player.coordinates, dt, delta);
     }
-    bullets.forEach(bullet => bullet.update(dt));
+    bullets.forEach(bullet => bullet.update(dt, 'player'));
+    monsterBullets.forEach(bullet => bullet.update(dt, 'monster'));
   }
 
   const clear = () =>  {
@@ -137,6 +138,7 @@ window.onload = function() {
     }
     player.render(now);
     bullets.forEach(bullet => bullet.render());
+    monsterBullets.forEach(bullet => bullet.render());
   }
 
   document.onkeydown = function (evt) {
