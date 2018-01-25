@@ -24,14 +24,33 @@ window.onload = function() {
     });
   }
 
+  function gameOverPrompt () {
+    player.dead();
+    monster.playerDefeated();
+    let gameOver = document.getElementById('game_over');
+    let timeout = setTimeout(() => {
+      gameOver.style.display = 'block';
+    }, 2000);
+
+    gameOver.addEventListener('click', function(e) {
+      clearTimeout(timeout);
+      gameOver.style.display = 'none';
+      monsterSprites.dead.currentFrame = 0;
+      monsterSprites.idle.currentFrame = 0;
+      player.currentSprite.currentFrame = 0;
+      monsterSprites.intro.currentFrame = 0;
+      restartGame();
+    });
+  }
+
   function restartGame () {
     let gameOver = document.getElementById('game_over');
-    // let gameOver = document.getElementById('game_over');
     gameOver.style.display = "none";
     monster = new Monster(ctx, canvas.width, canvas.height,
       monsterSprites.intro);
     player = new Player(ctx, canvas.width, canvas.height,
       playerSprites.aliveRight);
+    monsterBullets = monster.bullets;
   }
 
   let monster = new Monster(ctx, canvas.width, canvas.height,
@@ -57,7 +76,6 @@ window.onload = function() {
 
     if (gameStart) {
       bullets.forEach(bullet => {
-        // debugger
         bulletX = bullet.coordinates[0];
         bulletY = bullet.coordinates[1];
         if (bulletX < monsterX + monster.currentSprite.frameWidth - mHBoffset &&
@@ -74,27 +92,23 @@ window.onload = function() {
         }
       );
     }
+    monsterBullets.forEach(bullet => {
+      bulletX = bullet.coordinates[0];
+      bulletY = bullet.coordinates[1];
+      if (bulletX < playerX + player.currentSprite.frameWidth &&
+        bulletX + bullet.currentSprite.frameWidth > playerX &&
+        bulletY < playerY + player.currentSprite.frameHeight &&
+        bulletY + bullet.currentSprite.frameHeight > playerY) {
+          gameOverPrompt();
+      }
+    });
+
     if (playerX < monsterX + monster.currentSprite.frameWidth - mHBoffset&&
       playerX + player.hitBoxW > monsterX + mHBoffset&&
       playerY < monsterY + monster.currentSprite.frameHeight - mHBoffset&&
       playerY + player.hitBoxH > monsterY + mHBoffset&&
       monster.alive) {
-        player.dead();
-        monster.playerDefeated();
-        let gameOver = document.getElementById('game_over');
-        let timeout = setTimeout(() => {
-          gameOver.style.display = 'block';
-        }, 2000);
-
-        gameOver.addEventListener('click', function(e) {
-          clearTimeout(timeout);
-          gameOver.style.display = 'none';
-          monsterSprites.dead.currentFrame = 0;
-          monsterSprites.idle.currentFrame = 0;
-          player.currentSprite.currentFrame = 0;
-          monsterSprites.intro.currentFrame = 0;
-          restartGame();
-        });
+        gameOverPrompt();
       }
   }
 

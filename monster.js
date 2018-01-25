@@ -11,7 +11,8 @@ class Monster {
     this.coordinates = [700, 300];
     this.currentSprite = sprite;
     this.shift = 0;
-    this.health = 10;
+    this.maxHP = 300;
+    this.health = 300;
     this.alive = true;
     this.lastUpdate = Date.now();
     this.gameOver = false;
@@ -25,6 +26,13 @@ class Monster {
     this.pauseAnimation = false;
     this.bullets = [];
     this.bulletsLoaded = false;
+    this.currentPosition = this.currentPosition.bind(this);
+  }
+
+  currentPosition () {
+    return {
+      coordinates: this.setCenterCoords(),
+    };
   }
 
   setCenterCoords () {
@@ -123,12 +131,12 @@ class Monster {
   }
 
   bulletAttack () {
-    let i = 8;
-    while (i > 0) {
+    let i = 0;
+    while (i < 8) {
       let bulletCount = i;
-      this.bullets.push(new Bullet(this.coordinates, this.canvasW,
+      this.bullets.push(new Bullet(this.currentPosition(), this.canvasW,
         this.canvasH, this.ctx, bulletSprites.monster, bulletCount));
-      i--;
+      i++;
     }
     this.bulletsLoaded = true;
     this.bullets.filter(bullet => bullet.active);
@@ -136,22 +144,31 @@ class Monster {
   }
 
   handleIdle () {
-      if (!this.bulletsLoaded) {
-        this.bulletAttack();
-      }
-      if (this.counter >= 200 && !this.gameOver) {
-        this.bulletsLoaded = false;
+    if (!this.bulletsLoaded) {
+      this.bulletAttack();
+    }
+    let speed = 200;
+    if (this.health <= this.maxHP * .75 && this.health > this.maxHP * .5) {
+      speed = 180;
+    } else if (this.health <= this.maxHP * .5 && this.health > this.maxHP * .25) {
+      speed = 160;
+    } else if (this.health <= this.maxHP * .25) {
+      speed = 150;
+    }
+    if (this.counter >= speed && !this.gameOver) {
+      this.bulletsLoaded = false;
 
-        if (this.targetPos[0] >= this.coordinates[0]) {
-
-          this.currentSprite = monsterSprites.bite_e;
-          this.currentSprite.currentFrame = 0;
-        } else {
-          this.currentSprite = monsterSprites.bite_w;
-          this.currentSprite.currentFrame = 0;
-          }
-        this.counter = 0;
-      }
+      if (this.targetPos[0] >= this.coordinates[0]) {
+        this.shift = 0;
+        this.currentSprite = monsterSprites.bite_e;
+        this.currentSprite.currentFrame = 0;
+      } else {
+        this.shift = 0;
+        this.currentSprite = monsterSprites.bite_w;
+        this.currentSprite.currentFrame = 0;
+        }
+      this.counter = 0;
+    }
   }
 
   handleBiteWest (delta) {
@@ -165,6 +182,7 @@ class Monster {
     }
 
     if (this.coordinates[0] <= this.finalPlayerPos[0]){
+      this.shift = 0;
       this.currentSprite = monsterSprites.idle;
       if (this.coordinates[0] - this.currentSprite.frameWidth <=
         0){

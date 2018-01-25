@@ -10,10 +10,10 @@ const bulletSpriteSheet = {
   },
 
   monster: {
-    url: 'assets/images/bullet_horz.png',
-    name: 'rifle',
-    frameHeight: 6,
-    frameWidth: 14,
+    url: 'assets/images/mon_bullet_vert.png',
+    name: 'monster',
+    frameHeight: 32,
+    frameWidth: 9,
     damage: 10,
   },
 };

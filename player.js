@@ -88,7 +88,7 @@ class Player {
 
   currentPosition () {
     return {
-      playerPos: this.coordinates,
+      coordinates: this.coordinates,
       playerFace: this.facingPos
     };
   }
