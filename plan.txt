@@ -1,15 +1,12 @@
 NEEDED:
-- CREATED BY
+- CREATED BY [PRIORITY]
 - ARTIST CREDITS
-3) Adjust Difficulty
-4) Fix Monster death animation, should stop after one animation
-5) Sound
+5) Sound [PRIORITY]
 6) Throttle amt of bullets rendered
 8) monster spawn little worms
-9) Game Timer
-10) monster shoot on idle
-11) SpaceBar || enter to start game
-12) preload assets so not glitchy on first play online
+9) Game Timer [PRIORITY]
+11) SpaceBar || enter to start game [PRIORITY]
+12) preload assets so not glitchy on first play online [PRIORITY]
 
 
 // Fully functional fun game if above is complete
@@ -24,7 +21,6 @@ NEEDED:
 - game continues in background when gameover
 - game startes with player able to move around, doesnt start until shoot pile or get near
 - Fix monster hitbox, needs to be smaller
-- monster spit on idle
 - more worms spawn as time goes on
 - track
 - weapons

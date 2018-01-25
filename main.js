@@ -7,6 +7,7 @@ let Monster = require('./monster');
 let Player = require('./player');
 let Weapons = require('./weapons');
 let Bullet = require('./bullet');
+let preloadImages = require('./resources');
 
 window.onload = function() {
   let canvas = document.getElementById('canvas');
@@ -14,6 +15,7 @@ window.onload = function() {
   let startButton = 'assets/images/start_button.png';
   let gameOverSprite = 'assets/images/game_over.png';
   let myReq;
+  preloadAssets();
 
   function startGame () {
 
@@ -24,9 +26,15 @@ window.onload = function() {
     });
   }
 
+  function preloadAssets () {
+    preloadImages.forEach(image => {
+      let loadedImage = new Image();
+      loadedImage.src = image;
+    });
+  }
+
   function gameOverPrompt () {
-    player.dead();
-    monster.playerDefeated();
+
     let gameOver = document.getElementById('game_over');
     let timeout = setTimeout(() => {
       gameOver.style.display = 'block';
@@ -99,6 +107,8 @@ window.onload = function() {
         bulletX + bullet.currentSprite.frameWidth > playerX &&
         bulletY < playerY + player.currentSprite.frameHeight &&
         bulletY + bullet.currentSprite.frameHeight > playerY) {
+          player.dead();
+          monster.playerDefeated();
           gameOverPrompt();
       }
     });
@@ -108,6 +118,8 @@ window.onload = function() {
       playerY < monsterY + monster.currentSprite.frameHeight - mHBoffset&&
       playerY + player.hitBoxH > monsterY + mHBoffset&&
       monster.alive) {
+        player.dead();
+        monster.playerDefeated();
         gameOverPrompt();
       }
   }
@@ -133,8 +145,6 @@ window.onload = function() {
 
   function update (key, dt, delta) {
     player.update(key);
-    // let playerCenterPos =
-      // player.setCenterCoords(player.coordinates[0], player.coordinates[1]);
     if (gameStart) {
       monster.update(player.coordinates, dt, delta);
     }

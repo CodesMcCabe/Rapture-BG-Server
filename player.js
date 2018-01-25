@@ -27,35 +27,38 @@ class Player {
   }
 
   render(now) {
-    var playerSprite = new Image();
-    playerSprite.src = this.currentSprite.url;
+    if (!this.gameOver) {
 
-    // playerSprite.addEventListener
-    this.ctx.drawImage(playerSprite, this.shift, 0,
-      this.currentSprite.frameWidth, this.currentSprite.frameHeight,
-      this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
-      this.currentSprite.frameHeight);
-      // debugger
+      var playerSprite = new Image();
+      playerSprite.src = this.currentSprite.url;
 
-      let fps = this.currentSprite.fps * this.currentSprite.fpsX;
-      if (now - this.lastUpdate > fps && !this.gameOver)  {
-        this.currentSprite.fps = fps;
-        this.lastUpdate = now;
-        this.shift = this.currentSprite.currentFrame *
-        this.currentSprite.frameWidth;
+      // playerSprite.addEventListener
+      this.ctx.drawImage(playerSprite, this.shift, 0,
+        this.currentSprite.frameWidth, this.currentSprite.frameHeight,
+        this.coordinates[0], this.coordinates[1], this.currentSprite.frameWidth,
+        this.currentSprite.frameHeight);
+        // debugger
 
-        if (this.currentSprite.currentFrame ===
-          this.currentSprite.totalFrames && !this.alive) {
-            // this.currentSprite.currentFrame = 0;
-            this.alive = true;
+        let fps = this.currentSprite.fps * this.currentSprite.fpsX;
+        if (now - this.lastUpdate > fps && !this.gameOver)  {
+          this.currentSprite.fps = fps;
+          this.lastUpdate = now;
+          this.shift = this.currentSprite.currentFrame *
+          this.currentSprite.frameWidth;
 
-        } else if (this.currentSprite.currentFrame ===
-        this.currentSprite.totalFrames ) {
+          if (this.currentSprite.currentFrame ===
+            this.currentSprite.totalFrames &&
+            this.currentSprite.name === 'dead') {
+              this.gameOver = true;
 
-        this.shift = 0;
-        this.currentSprite.currentFrame = 0;
-      }
-      this.currentSprite.currentFrame += 1;
+            } else if (this.currentSprite.currentFrame ===
+              this.currentSprite.totalFrames ) {
+
+                this.shift = 0;
+                this.currentSprite.currentFrame = 0;
+              }
+              this.currentSprite.currentFrame += 1;
+            }
     }
   }
 
