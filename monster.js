@@ -11,8 +11,8 @@ class Monster {
     this.coordinates = [700, 300];
     this.currentSprite = sprite;
     this.shift = 0;
-    this.maxHP = 1;
-    this.health = 1;
+    this.maxHP = 300;
+    this.health = 300;
     this.alive = true;
     this.lastUpdate = Date.now();
     this.gameOver = false;
