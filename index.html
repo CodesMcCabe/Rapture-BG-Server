@@ -17,8 +17,21 @@
       src="https://s3.us-east-2.amazonaws.com/rapture-bg/cave+themeb4.ogg"
       autoplay loop>
     </audio>
-    <audio id="audio_hover"
+    <audio id="music" loop src="https://s3.us-east-2.amazonaws.com/rapture-bg/cave_mixed.ogg">
+    </audio>
+    <audio id="audio_hover" preload="auto"
       src="https://s3.us-east-2.amazonaws.com/rapture-bg/ambience-3.wav">
+    </audio>
+    <audio id="spit"      src="https://s3.us-east-2.amazonaws.com/rapture-bg/qubodupSlimeMonster-damage1.ogg">
+    </audio>
+    <audio id="bullet"  src="https://s3.us-east-2.amazonaws.com/rapture-bg/cg1.wav">
+    </audio>
+    <audio id="intro_monster" src="https://s3.us-east-2.amazonaws.com/rapture-bg/monster-1.wav">
+    </audio>
+    <audio id="charge"
+      src="https://s3.us-east-2.amazonaws.com/rapture-bg/monster-14.wav">
+    </audio>
+    <audio id="monster_bg" src="https://s3.us-east-2.amazonaws.com/rapture-bg/MonsterCreaturesVoiceSound002.mp3">
     </audio>
     <header>
       <img class="welcome_sign" src="assets/images/background/welcome_sign.png"/>
@@ -44,8 +57,7 @@
             <button id="start" class="start_button" type="button" name="button">Press Start</button>
           </div>
           <div class="gameover_screen">
-            <button id="game_over"class="restart_button" type="button" name="button">Play again?</button>
-            <!-- <img id="game_over" class="restart_button" src="assets/images/game_over_again.jpg"> -->
+            <button id="game_over" class="restart_button" type="button" name="button">Play again?</button>
           </div>
         </div>
         <div class="sidebar_links_container">
@@ -60,7 +72,6 @@
               <a href="https://www.linkedin.com/in/cody-mccabe-114385b0/"><img class="linkedin" src="assets/images/linkedin_logo.png"></a>
             </li>
           </ul>
-
         </div>
       </div>
     </div>

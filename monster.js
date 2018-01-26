@@ -11,8 +11,8 @@ class Monster {
     this.coordinates = [700, 300];
     this.currentSprite = sprite;
     this.shift = 0;
-    this.maxHP = 300;
-    this.health = 300;
+    this.maxHP = 1;
+    this.health = 1;
     this.alive = true;
     this.lastUpdate = Date.now();
     this.gameOver = false;
@@ -124,6 +124,11 @@ class Monster {
         velocity * delta);
       this.coordinates[1] = this.coordinates[1] + (normalized[1] *
         velocity * delta);
+
+      if (this.currentSprite.currentFrame === 0) {
+        let charge = document.getElementById('charge');
+        charge.play();
+      }
   }
 
   randomCount() {
@@ -140,12 +145,14 @@ class Monster {
     }
     this.bulletsLoaded = true;
     this.bullets.filter(bullet => bullet.active);
-    console.log(this.bullets.length);
   }
 
   handleIdle () {
     if (!this.bulletsLoaded) {
+      let spit = document.getElementById('spit');
+      spit.volume = 0.5;
       this.bulletAttack();
+      spit.play();
     }
     let speed = 200;
     if (this.health <= this.maxHP * .75 && this.health > this.maxHP * .5) {

@@ -17,22 +17,27 @@ window.onload = function() {
   let myReq;
   preloadAssets();
 
-  function hoverSound () {
-
-  }
-
   function startGame () {
     let start = document.getElementById('start');
+    let music = document.getElementById('music');
+    let introMusic = document.getElementById('cave_theme');
+    let timer = Date.now();
+    // set up date now
+    // convert to seconds
+    // end when gameOver
+    // have timer div set up and append to the id of the div tag
 
     start.addEventListener('click', function(e) {
         start.className = 'start_button_hide';
         gameStart = true;
+        introMusic.pause();
+        music.volume = .7;
+        music.play();
     });
 
     let audio = document.getElementById('audio_hover');
     audio.volume = 0.4;
     start.addEventListener('mouseover', function(evt) {
-      audio.load();
       audio.play();
     });
   }
@@ -54,7 +59,6 @@ window.onload = function() {
     let audio = document.getElementById('audio_hover');
     audio.volume = 0.4;
     gameOver.addEventListener('mouseover', function(evt) {
-      audio.load();
       audio.play();
     });
 
@@ -113,7 +117,9 @@ window.onload = function() {
 
             if (monster.health <= 0) {
               monster.defeated();
+              gameOverPrompt();
             }
+
           }
         }
       );
@@ -135,7 +141,7 @@ window.onload = function() {
       playerX + player.hitBoxW > monsterX + mHBoffset&&
       playerY < monsterY + monster.currentSprite.frameHeight - mHBoffset&&
       playerY + player.hitBoxH > monsterY + mHBoffset &&
-      gameStart) {
+      gameStart && monster.alive) {
         player.dead();
         monster.playerDefeated();
         gameOverPrompt();
@@ -157,6 +163,10 @@ window.onload = function() {
       bullets = bullets.filter(bullet => bullet.active);
 
     Fire();
+    let bulletSound = document.getElementById('bullet');
+    bulletSound.volume = 0.3;
+    bulletSound.load();
+    bulletSound.play();
   }
 
   function update (key, dt, delta) {
@@ -179,6 +189,18 @@ window.onload = function() {
     player.render(now);
     bullets.forEach(bullet => bullet.render());
     monsterBullets.forEach(bullet => bullet.render());
+    if (monster.currentSprite.name === 'intro' &&
+    gameStart && monster.currentSprite.currentFrame === 1) {
+      let intro = document.getElementById('intro_monster');
+      intro.volume = 0.9;
+      intro.play();
+    } else if (monster.currentSprite.name !== 'intro' && gameStart &&
+    monster.alive) {
+      let monBG = document.getElementById('monster_bg');
+      monBG.volume = .6;
+      monBG.playbackRate = 3.5;
+      monBG.play();
+    }
   }
 
   document.onkeydown = function (evt) {
@@ -187,7 +209,6 @@ window.onload = function() {
     if(keys.includes(key)) {
       evt.preventDefault();
     }
-    // key.preventDefault();
     player.keyPressed[key] = true;
     if (key === 32 && player.alive && allowFire) {
       shoot(player.currentPosition());
