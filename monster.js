@@ -118,7 +118,7 @@ class Monster {
       let playerDir = this.findDirectionVector();
       let magnitude = this.findMagnitude(playerDir[0], playerDir[1]);
       let normalized = this.normalizeVector(playerDir, magnitude);
-      let velocity = 2;
+      let velocity = 1.5;
 
       this.coordinates[0] = this.coordinates[0] + (normalized[0] *
         velocity * delta);
@@ -127,6 +127,7 @@ class Monster {
 
       if (this.currentSprite.currentFrame === 0) {
         let charge = document.getElementById('charge');
+        charge.volume = 1;
         charge.play();
       }
   }
@@ -150,7 +151,7 @@ class Monster {
   handleIdle () {
     if (!this.bulletsLoaded) {
       let spit = document.getElementById('spit');
-      spit.volume = 0.5;
+      spit.volume = 1;
       this.bulletAttack();
       spit.play();
     }

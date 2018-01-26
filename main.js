@@ -21,6 +21,7 @@ window.onload = function() {
     let start = document.getElementById('start');
     let music = document.getElementById('music');
     let introMusic = document.getElementById('cave_theme');
+    introMusic.volume = 1;
     let timer = Date.now();
     // set up date now
     // convert to seconds
@@ -50,7 +51,6 @@ window.onload = function() {
   }
 
   function gameOverPrompt () {
-
     let gameOver = document.getElementById('game_over');
     let timeout = setTimeout(() => {
       gameOver.style.display = 'block';
@@ -164,7 +164,7 @@ window.onload = function() {
 
     Fire();
     let bulletSound = document.getElementById('bullet');
-    bulletSound.volume = 0.3;
+    bulletSound.volume = 0.7;
     bulletSound.load();
     bulletSound.play();
   }
@@ -192,12 +192,12 @@ window.onload = function() {
     if (monster.currentSprite.name === 'intro' &&
     gameStart && monster.currentSprite.currentFrame === 1) {
       let intro = document.getElementById('intro_monster');
-      intro.volume = 0.9;
+      intro.volume = 1;
       intro.play();
     } else if (monster.currentSprite.name !== 'intro' && gameStart &&
     monster.alive) {
       let monBG = document.getElementById('monster_bg');
-      monBG.volume = .6;
+      monBG.volume = 1;
       monBG.playbackRate = 3.5;
       monBG.play();
     }
