@@ -1,18 +1,13 @@
 NEEDED:
-1) Consider smaller screens [DONE]
-2) Add win restart modal [DONE]
-3) Add sound [DONE]
-4) Add game timer
-
+1) Mute Sound
+2) Next level thats harder and has a diff weapon
+3) speed boots
+4) monster health bar
 - CREATED BY [PRIORITY]
 - ARTIST CREDITS
-5) Sound [PRIORITY]
-6) Throttle amt of bullets rendered
 8) monster spawn little worms
 9) Game Timer [PRIORITY]
 11) SpaceBar || enter to start game [PRIORITY]
-12) preload assets so not glitchy on first play online [PRIORITY]
-
 
 // Fully functional fun game if above is complete
 
@@ -23,8 +18,6 @@ NEEDED:
 - add additional attacks
 
 
-- game continues in background when gameover
-- game startes with player able to move around, doesnt start until shoot pile or get near
 - Fix monster hitbox, needs to be smaller
 - more worms spawn as time goes on
 - track
