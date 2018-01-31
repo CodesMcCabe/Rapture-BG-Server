@@ -24,3 +24,9 @@ NEEDED:
 - weapons
 - random walls emerge and block paths
 - incorporate digging animation that tracks player for a while, if caught pops out and eats player
+
+
+BEFORE SHOWCASE:
+
+- animation for flash charge
+- slow down charge or bullets
