@@ -266,7 +266,7 @@ window.onload = function() {
       audio.play();
     });
   }
-
+ 
   function preloadAssets () {
     preloadImages.forEach(image => {
       let loadedImage = new Image();
