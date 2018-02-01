@@ -60,9 +60,15 @@ button:focus {
 }
 
 .timer {
-  margin-top: 70%;
+  /* margin-top: 65%; */
   font-size: 28px;
   text-decoration: underline;
+  -webkit-text-stroke: 1px #ff1493;
+  margin-bottom: 5vh;
+}
+
+.strong {
+  font-weight: bold;
 }
 
 .gameover_screen {
@@ -143,7 +149,7 @@ button:focus {
 .left_sidebar_links_container {
   display: flex;
   width: 9.5vw;
-  margin-top: 5%;
+  margin-top: 2%;
   justify-content: center;
 }
 
@@ -159,8 +165,15 @@ img.globe {
   width: 100%;
   margin-top: 0;
   /* padding-top: 5vh; */
-  padding-bottom: 5vh;
+  padding-bottom: 1vh;
   /* margin-bottom: 140px; */
+}
+
+.wasd {
+  width: 100%;
+  margin-top: 0;
+  /* padding-top: 5vh; */
+  padding-bottom: 5vh;
 }
 
 img.spacebar {

@@ -65,6 +65,11 @@ window.onload = function() {
   }
 
   function gameOverPrompt () {
+    let introMusic = document.getElementById('cave_theme');
+    introMusic.volume = 1;
+    introMusic.play();
+    let music = document.getElementById('music');
+    music.pause();
     gameTimerStop = true;
     let gameOver = document.getElementById('game_over');
     let audio = document.getElementById('audio_hover');
@@ -111,6 +116,9 @@ window.onload = function() {
   }
 
   function restartGame () {
+    let music = document.getElementById('music');
+    music.volume = .7;
+    music.play();
     gameTimerStop = false;
     gameTimerStart = Date.now();
     gameWin = false;
@@ -135,6 +143,8 @@ window.onload = function() {
   let allowFire = true;
   let playerHit = new BloodHit(player.currentPosition(), ctx,
     bloodHitSprites.playerHit);
+  let monsterHit = new BloodHit(monster.currentPosition(), ctx,
+    bloodHitSprites.monsterHit);
 
   let gameWin = false;
   function collisionDetected () {
@@ -148,6 +158,7 @@ window.onload = function() {
     let mHBoffset = 40;
 
     if (gameStart) {
+      let bloodSquirt = document.getElementById('monster_hit');
       bullets.forEach(bullet => {
         bulletX = bullet.coordinates[0];
         bulletY = bullet.coordinates[1];
@@ -155,10 +166,17 @@ window.onload = function() {
           bulletX + bullet.currentSprite.frameWidth > monsterX + mHBoffset &&
           bulletY < monsterY + monster.currentSprite.frameHeight - mHBoffset &&
           bulletY + bullet.currentSprite.frameHeight > monsterY + mHBoffset) {
+            bloodSquirt.volume = 1;
+            bloodSquirt.playbackRate = 4;
+            bloodSquirt.play();
             monster.reduceHealth(bullet.currentSprite.damage);
             bullets.splice(0, 1);
+            monsterHit = new BloodHit(monster.currentPosition(), ctx,
+            bloodHitSprites.monsterHit);
+            monsterHit.collision = true;
 
             if (monster.health <= 0) {
+              monsterHit.collision = false;
               gameWin = true;
               monster.defeated();
               gameOverPrompt();
@@ -168,6 +186,7 @@ window.onload = function() {
         }
       );
     }
+    let grunt = document.getElementById('grunt');
     monsterBullets.forEach(bullet => {
       bulletX = bullet.coordinates[0];
       bulletY = bullet.coordinates[1];
@@ -176,6 +195,9 @@ window.onload = function() {
         bulletY < playerY + player.currentSprite.frameHeight &&
         bulletY + bullet.currentSprite.frameHeight > playerY) {
           player.reduceHealth(bullet.currentSprite.damage);
+          grunt.volume = 1;
+          grunt.playbackRate = 2;
+          grunt.play();
           let index = monsterBullets.indexOf(bullet);
           monsterBullets.splice(index, 1);
           playerHit = new BloodHit(player.currentPosition(), ctx,
@@ -241,6 +263,10 @@ window.onload = function() {
       playerHit.render(now);
     }
 
+    if (monsterHit.collision) {
+      monsterHit.render(now);
+    }
+
     if (gameStart) {
       monster.render(now);
     }
@@ -282,14 +308,18 @@ window.onload = function() {
     key = null;
   };
   let gameTimerStop = false;
-  let gameTimerStart;
+  let gameTimerStart = (0).toFixed(1);
   let elapsed;
   function timer() {
     let time = document.getElementById('timer');
+
     if (gameStart && !gameTimerStop) {
       elapsed = ((Date.now() - gameTimerStart) / 1000).toFixed(1);
-
       time.innerHTML = `${elapsed}`;
+    } else if (gameTimerStop) {
+      time.innerHTML = elapsed;
+    } else {
+      time.innerHTML = gameTimerStart;
     }
   }
 

@@ -13,6 +13,10 @@
     </style>
   </head>
   <body>
+    <audio id="grunt"   src="https://s3.us-east-2.amazonaws.com/rapture-bg/gruntsound.ogg">
+    </audio>
+    <audio id="monster_hit" src="https://s3.us-east-2.amazonaws.com/rapture-bg/flyswatter.ogg">
+    </audio>
     <audio id="cave_theme"
       src="https://s3.us-east-2.amazonaws.com/rapture-bg/cave+themeb4.ogg"
       autoplay loop>
@@ -40,16 +44,18 @@
       <div class="canvas_two_container">
         <div class="left_sidebar_links_container">
           <ul class="left_sidebar_links">
+            <li id="timer" class='timer'></li>
             <li class="text_underline">Move</li>
             <li>
               <img class="keys" src="assets/images/arrows_pop.png">
+              <div class="">or</div>
+              <img class="wasd" src="assets/images/wasd.png">
             </li>
             <li class="text_underline">Fire</li>
             <li>
               <img class="spacebar" src="assets/images/spacebar.png">
-              <div class="rof">(Hold for increased rate of fire)</div>
+              <div class="rof"><strong>Hold</strong> for increased rate of fire</div>
             </li>
-            <li id="timer" class='timer'></li>
           </ul>
         </div>
         <div class="">

@@ -31,6 +31,7 @@ const images = [
   'assets/images/worm_idle.png',
   'assets/images/worm_idle_glow2.png',
   'assets/images/worm_intro.png',
+  'assets/images/wasd.png',
 ];
 
 module.exports = images;
