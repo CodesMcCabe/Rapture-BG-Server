@@ -7,7 +7,6 @@ NEEDED:
 - ARTIST CREDITS
 8) monster spawn little worms
 9) Game Timer [PRIORITY]
-11) SpaceBar || enter to start game [PRIORITY]
 
 // Fully functional fun game if above is complete
 
@@ -28,7 +27,6 @@ NEEDED:
 
 BEFORE SHOWCASE:
 
-- animation for flash charge
 - slow down charge or bullets
 
 

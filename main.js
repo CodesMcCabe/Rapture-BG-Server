@@ -21,7 +21,6 @@ window.onload = function() {
     let music = document.getElementById('music');
     let introMusic = document.getElementById('cave_theme');
     introMusic.volume = 1;
-    let timer = Date.now();
     // set up date now
     // convert to seconds
     // end when gameOver
@@ -30,6 +29,8 @@ window.onload = function() {
     start.addEventListener('click', function(e) {
         start.className = 'start_button_hide';
         gameStart = true;
+        gameWin = false;
+        gameTimerStart = Date.now();
         introMusic.pause();
         music.volume = .7;
         music.play();
@@ -39,6 +40,8 @@ window.onload = function() {
       if (evt.keyCode === 13) {
         start.className = 'start_button_hide';
         gameStart = true;
+        gameWin = false;
+        gameTimerStart = Date.now();
         introMusic.pause();
         music.volume = .7;
         music.play();
@@ -62,12 +65,21 @@ window.onload = function() {
   }
 
   function gameOverPrompt () {
+    gameTimerStop = true;
     let gameOver = document.getElementById('game_over');
+    let audio = document.getElementById('audio_hover');
+    let scoreScreen = document.getElementById('score_screen');
+    if (gameWin) {
+      scoreScreen.innerHTML = `Worm Boss defeated in ${elapsed} seconds!`;
+    } else {
+      scoreScreen.innerHTML = `You survived for ${elapsed} seconds.`;
+    }
+
     let timeout = setTimeout(() => {
       gameOver.style.display = 'block';
+      scoreScreen.style.display = 'block';
     }, 2000);
 
-    let audio = document.getElementById('audio_hover');
     audio.volume = 0.4;
     gameOver.addEventListener('mouseover', function(evt) {
       audio.play();
@@ -76,6 +88,7 @@ window.onload = function() {
     gameOver.addEventListener('click', function(e) {
       clearTimeout(timeout);
       gameOver.style.display = 'none';
+      scoreScreen.style.display = 'none';
       monsterSprites.dead.currentFrame = 0;
       monsterSprites.idle.currentFrame = 0;
       player.currentSprite.currentFrame = 0;
@@ -98,6 +111,8 @@ window.onload = function() {
   }
 
   function restartGame () {
+    gameTimerStop = false;
+    gameTimerStart = Date.now();
     let gameOver = document.getElementById('game_over');
     gameOver.style.display = "none";
     monster = new Monster(ctx, canvas.width, canvas.height,
@@ -120,7 +135,7 @@ window.onload = function() {
   let playerHit = new BloodHit(player.currentPosition(), ctx,
     bloodHitSprites.playerHit);
 
-
+  let gameWin = false;
   function collisionDetected () {
     let collideBullets = Object.assign([], bullets);
     let bulletX;
@@ -143,6 +158,7 @@ window.onload = function() {
             bullets.splice(0, 1);
 
             if (monster.health <= 0) {
+              gameWin = true;
               monster.defeated();
               gameOverPrompt();
             }
@@ -264,6 +280,18 @@ window.onload = function() {
     player.keyPressed[evt.which] = false;
     key = null;
   };
+  let gameTimerStop = false;
+  let gameTimerStart;
+  let elapsed;
+  function timer() {
+    let time = document.getElementById('timer');
+    if (gameStart && !gameTimerStop) {
+      elapsed = ((Date.now() - gameTimerStart) / 1000).toFixed(1);
+
+      time.innerHTML = elapsed;
+    }
+  }
+
   // let delta;
   function main() {
     let now = Date.now();
@@ -271,6 +299,7 @@ window.onload = function() {
     let dt = (delta) / 500.0;
     myReq = requestAnimationFrame( main );
     collisionDetected();
+    timer();
     update(key, dt, delta);
     clear();
     render(now);

@@ -13,7 +13,7 @@ header {
 .start_screen {
   position: absolute;
   z-index: 1;
-  left: 45%;
+  left: 43%;
   top: 40%;
   width: 13%;
 }
@@ -52,7 +52,7 @@ button:focus {
 .gameover_screen {
   position: absolute;
   z-index: 1;
-  left: 45%;
+  left: 43%;
   top: 40%;
   width: 13%;
 }
