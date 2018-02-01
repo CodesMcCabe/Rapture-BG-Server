@@ -27,10 +27,6 @@ header {
   display: none;
 }
 
-.rof {
-  text-decoration:none;
-  font-size: 12px;
-}
 
 button:focus {
   outline: 0;
@@ -49,10 +45,38 @@ button:focus {
   color: #ff1493;
 }
 
+.score_screen {
+  display: none;
+  width: 100%;
+  background-color: #2a445d;
+  border: 5px solid black;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75vw;
+  color: #ff1493;
+  left: 40%;
+}
+
+.timer {
+  margin-top: 70%;
+  font-size: 28px;
+  text-decoration: underline;
+}
+
 .gameover_screen {
   position: absolute;
   z-index: 1;
-  left: 43%;
+  left: 33%;
+  top: 20%;
+  width: 30%;
+}
+
+.gameover_button {
+  position: absolute;
+  z-index: 1;
+  left: 42.75%;
   top: 40%;
   width: 13%;
 }
@@ -72,7 +96,6 @@ button:focus {
   text-align: center;
   font-family: 'Orbitron', sans-serif;
   font-size: 1.75vw;
-  /* font-weight: bold; */
   color: #ff1493;
 }
 
@@ -82,6 +105,12 @@ button:focus {
   height: 160px;
   margin-right: 50px;
 }
+
+.rof {
+  text-decoration:none;
+  font-size: 12px;
+}
+
 .left_sidebar_links {
   list-style: none;
   width: 90%;
@@ -89,7 +118,7 @@ button:focus {
   font-weight: bold;
   font-size: 20px;
   color: #fff;
-  text-decoration:underline;
+  /* text-decoration:underline; */
   text-align: center;
 }
 
@@ -122,7 +151,8 @@ img.globe {
   width: 100%;
 }
 
-li.move_text {
+.text_underline {
+  text-decoration: underline;
 }
 
 .keys {

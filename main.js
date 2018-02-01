@@ -113,6 +113,7 @@ window.onload = function() {
   function restartGame () {
     gameTimerStop = false;
     gameTimerStart = Date.now();
+    gameWin = false;
     let gameOver = document.getElementById('game_over');
     gameOver.style.display = "none";
     monster = new Monster(ctx, canvas.width, canvas.height,
