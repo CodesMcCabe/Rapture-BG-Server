@@ -1,8 +1,10 @@
 let monsterSprites = require('./lib/sprites/monster_sprites.js');
 let playerSprites = require('./lib/sprites/player_sprites.js');
 let bulletSprites = require('./lib/sprites/bullet_sprites.js');
+let bloodHitSprites = require('./lib/sprites/blood_hit_sprites.js');
 let Sprite = require('./lib/classes/sprite.js');
 let Monster = require('./lib/classes/monster.js');
+let BloodHit = require('./lib/classes/blood_hit.js');
 let Player = require('./lib/classes/player.js');
 let Weapons = require('./lib/classes/weapons.js');
 let Bullet = require('./lib/classes/bullet.js');
@@ -32,6 +34,18 @@ window.onload = function() {
         music.volume = .7;
         music.play();
     });
+
+    document.onkeypress = function (evt) {
+      if (evt.keyCode === 13) {
+        start.className = 'start_button_hide';
+        gameStart = true;
+        introMusic.pause();
+        music.volume = .7;
+        music.play();
+      }
+    };
+
+
 
     let audio = document.getElementById('audio_hover');
     audio.volume = 0.4;
@@ -68,6 +82,19 @@ window.onload = function() {
       monsterSprites.intro.currentFrame = 0;
       restartGame();
     });
+
+    // document.onkeypress = function (evt) {
+    //   // evt.preventDefault();
+    //   if (evt.keyCode === 13) {
+    //     clearTimeout(timeout);
+    //     gameOver.style.display = 'none';
+    //     monsterSprites.dead.currentFrame = 0;
+    //     monsterSprites.idle.currentFrame = 0;
+    //     player.currentSprite.currentFrame = 0;
+    //     monsterSprites.intro.currentFrame = 0;
+    //     restartGame();
+    //   }
+    // };
   }
 
   function restartGame () {
@@ -90,6 +117,9 @@ window.onload = function() {
   let lastTime = Date.now();
   let key;
   let allowFire = true;
+  let playerHit = new BloodHit(player.currentPosition(), ctx,
+    bloodHitSprites.playerHit);
+
 
   function collisionDetected () {
     let collideBullets = Object.assign([], bullets);
@@ -131,8 +161,12 @@ window.onload = function() {
           player.reduceHealth(bullet.currentSprite.damage);
           let index = monsterBullets.indexOf(bullet);
           monsterBullets.splice(index, 1);
+          playerHit = new BloodHit(player.currentPosition(), ctx,
+          bloodHitSprites.playerHit);
+          playerHit.collision = true;
 
           if (player.health <= 0) {
+            playerHit.collision = false;
             player.dead();
             monster.playerDefeated();
             gameOverPrompt();
@@ -186,11 +220,18 @@ window.onload = function() {
   };
 
   function render (now) {
+    if (playerHit.collision) {
+      playerHit.render(now);
+    }
+
     if (gameStart) {
       monster.render(now);
     }
+
     player.render(now);
+
     bullets.forEach(bullet => bullet.render());
+
     monsterBullets.forEach(bullet => bullet.render());
     if (monster.currentSprite.name === 'intro' &&
     gameStart && monster.currentSprite.currentFrame === 1) {
