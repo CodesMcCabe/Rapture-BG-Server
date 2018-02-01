@@ -289,7 +289,7 @@ window.onload = function() {
     if (gameStart && !gameTimerStop) {
       elapsed = ((Date.now() - gameTimerStart) / 1000).toFixed(1);
 
-      time.innerHTML = elapsed;
+      time.innerHTML = `${elapsed}`;
     }
   }
 
