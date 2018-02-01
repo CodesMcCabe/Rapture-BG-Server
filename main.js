@@ -11,8 +11,6 @@ let preloadImages = require('./resources.js');
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
-  let startButton = 'assets/images/start_button.png';
-  let gameOverSprite = 'assets/images/game_over.png';
   let myReq;
   preloadAssets();
 

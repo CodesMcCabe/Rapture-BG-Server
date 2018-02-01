@@ -10,7 +10,6 @@ const images = [
   'assets/images/bullet_horz.png',
   'assets/images/bullet_vert.png',
   'assets/images/dirt_pop.png',
-  'assets/images/game_over_again.jpg',
   'assets/images/dirt_pop.png',
   'assets/images/github-original.png',
   'assets/images/globe.png',
@@ -28,9 +27,9 @@ const images = [
   'assets/images/player_rifle_up.png',
   'assets/images/player_rifle.png',
   'assets/images/spacebar.png',
-  'assets/images/start_button.png',
   'assets/images/worm_dead.png',
   'assets/images/worm_idle.png',
+  'assets/images/worm_idle_glow2.png',
   'assets/images/worm_intro.png',
 ];
 

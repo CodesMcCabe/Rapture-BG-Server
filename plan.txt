@@ -30,3 +30,7 @@ BEFORE SHOWCASE:
 
 - animation for flash charge
 - slow down charge or bullets
+
+
+20 px width
+2430
