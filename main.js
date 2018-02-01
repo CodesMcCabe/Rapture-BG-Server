@@ -128,9 +128,15 @@ window.onload = function() {
         bulletX + bullet.currentSprite.frameWidth > playerX &&
         bulletY < playerY + player.currentSprite.frameHeight &&
         bulletY + bullet.currentSprite.frameHeight > playerY) {
-          player.dead();
-          monster.playerDefeated();
-          gameOverPrompt();
+          player.reduceHealth(bullet.currentSprite.damage);
+          let index = monsterBullets.indexOf(bullet);
+          monsterBullets.splice(index, 1);
+
+          if (player.health <= 0) {
+            player.dead();
+            monster.playerDefeated();
+            gameOverPrompt();
+          }
       }
     });
 
