@@ -71,6 +71,16 @@ button:focus {
   font-weight: bold;
 }
 
+.healthbar_container {
+  display: flex;
+  justify-content: center;
+}
+
+.healthbar {
+  background: blue;
+  width: 70%;
+}
+
 .gameover_screen {
   position: absolute;
   z-index: 1;

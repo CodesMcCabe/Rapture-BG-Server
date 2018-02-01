@@ -179,6 +179,8 @@ window.onload = function() {
             monsterHit = new BloodHit(monster.currentPosition(), ctx,
             bloodHitSprites.monsterHit);
             monsterHit.collision = true;
+            let health = document.getElementById('health');
+            health.value -= bullet.currentSprite.damage;
 
             if (monster.health <= 0) {
               let death = document.getElementById('monster_death');
@@ -350,6 +352,7 @@ window.onload = function() {
 
   // let delta;
   function main() {
+
     let now = Date.now();
     let delta = now - lastTime;
     let dt = (delta) / 500.0;
