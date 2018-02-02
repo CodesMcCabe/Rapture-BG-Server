@@ -20,6 +20,7 @@ window.onload = function() {
     let start = document.getElementById('start');
     let music = document.getElementById('music');
     let introMusic = document.getElementById('cave_theme');
+    let healthBar = document.getElementById('healthbar');
     introMusic.volume = 1;
     // set up date now
     // convert to seconds
@@ -27,6 +28,7 @@ window.onload = function() {
     // have timer div set up and append to the id of the div tag
 
     start.addEventListener('click', function(e) {
+        healthBar.style.display = "block";
         start.className = 'start_button_hide';
         gameStart = true;
         gameWin = false;
@@ -38,6 +40,7 @@ window.onload = function() {
 
     document.onkeypress = function (evt) {
       if (evt.keyCode === 13) {
+        healthBar.style.display = "block";
         start.className = 'start_button_hide';
         gameStart = true;
         gameWin = false;
@@ -121,6 +124,8 @@ window.onload = function() {
     let music = document.getElementById('music');
     let gameOver = document.getElementById('game_over');
     let scoreScreen = document.getElementById('score_screen');
+    let healthbar = document.getElementById('healthbar');
+    healthbar.value = 400;
     music.volume = .7;
     music.play();
     gameTimerStop = false;
@@ -179,7 +184,7 @@ window.onload = function() {
             monsterHit = new BloodHit(monster.currentPosition(), ctx,
             bloodHitSprites.monsterHit);
             monsterHit.collision = true;
-            let health = document.getElementById('health');
+            let health = document.getElementById('healthbar');
             health.value -= bullet.currentSprite.damage;
 
             if (monster.health <= 0) {

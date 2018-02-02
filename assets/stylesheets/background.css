@@ -76,7 +76,17 @@ button:focus {
   justify-content: center;
 }
 
+progress::-webkit-progress-bar {
+  background: #fff;
+  border: 1px solid #fff;
+}
+
+progress::-webkit-progress-value {
+  background: #ff1493;
+}
+
 .healthbar {
+  display: none;
   background: blue;
   width: 70%;
 }
