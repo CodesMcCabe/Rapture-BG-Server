@@ -2,11 +2,9 @@ NEEDED:
 1) Mute Sound
 2) Next level thats harder and has a diff weapon
 3) speed boots
-4) monster health bar
 - CREATED BY [PRIORITY]
 - ARTIST CREDITS
 8) monster spawn little worms
-9) Game Timer [PRIORITY]
 
 // Fully functional fun game if above is complete
 
@@ -32,3 +30,5 @@ BEFORE SHOWCASE:
 
 20 px width
 2430
+
+watchify main.js -o bundle.js --debug -v
