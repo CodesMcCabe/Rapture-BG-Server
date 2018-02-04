@@ -125,7 +125,7 @@ window.onload = function() {
     let gameOver = document.getElementById('game_over');
     let scoreScreen = document.getElementById('score_screen');
     let healthbar = document.getElementById('healthbar');
-    healthbar.value = 400;
+    healthbar.value = monster.maxHP;
     music.volume = .7;
     music.play();
     gameTimerStop = false;
