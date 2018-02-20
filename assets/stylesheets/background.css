@@ -152,18 +152,11 @@ progress::-webkit-progress-value {
   width: 80%;
 }
 
-.sidebar_links li {
-}
-
 .sidebar_links_container {
   display: flex;
   width: 9.5vw;
   margin-top: 5%;
   justify-content: center;
-}
-
-.sidebar_links_container li {
-  /* padding-bottom: 250%; */
 }
 
 .left_sidebar_links_container {
@@ -173,8 +166,14 @@ progress::-webkit-progress-value {
   justify-content: center;
 }
 
+img.audio-mute {
+  margin-top: 15vh;
+  cursor: pointer;
+}
+
 img.globe {
   width: 100%;
+  cursor: pointer;
 }
 
 .text_underline {
@@ -184,15 +183,12 @@ img.globe {
 .keys {
   width: 100%;
   margin-top: 0;
-  /* padding-top: 5vh; */
   padding-bottom: 1vh;
-  /* margin-bottom: 140px; */
 }
 
 .wasd {
   width: 100%;
   margin-top: 0;
-  /* padding-top: 5vh; */
   padding-bottom: 5vh;
 }
 
@@ -204,14 +200,14 @@ img.github {
   padding-top: 5vh;
   padding-bottom: 5vh;
   width: 100%;
+  cursor: pointer;
 }
 
 img.linkedin {
   padding-bottom: 0;
   width: 100%;
-
+  cursor: pointer;
 }
-
 
 .canvas_two_container {
   display: flex;
@@ -222,7 +218,6 @@ img.linkedin {
 .canvas_container {
   position: relative;
 }
-
 
 .welcome_sign {
   width: 40vw;

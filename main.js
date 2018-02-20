@@ -16,16 +16,33 @@ window.onload = function() {
   let myReq;
   preloadAssets();
 
+  let sounds = document.getElementsByTagName('audio');
+  let audioMute = document.getElementById('audio');
+  audioMute.addEventListener('click', function(e) {
+    let i;
+    if (sounds[0].muted === true) {
+      audioMute.src = "assets/images/audio_play.png";
+      // audioMute = document.getElementById('audio');
+    } else {
+      audioMute.src = "assets/images/audio_mute.png";
+      // audioMute = document.getElementById('audio');
+    }
+
+    for (i = 0; i < sounds.length; i++) {
+      if(sounds[i].muted === true) {
+        sounds[i].muted = false;
+      } else {
+        sounds[i].muted = true;
+      }
+    }
+  });
+
   function startGame () {
     let start = document.getElementById('start');
     let music = document.getElementById('music');
     let introMusic = document.getElementById('cave_theme');
     let healthBar = document.getElementById('healthbar');
     introMusic.volume = 1;
-    // set up date now
-    // convert to seconds
-    // end when gameOver
-    // have timer div set up and append to the id of the div tag
 
     start.addEventListener('click', function(e) {
         healthBar.style.display = "block";
@@ -50,8 +67,6 @@ window.onload = function() {
         music.play();
       }
     };
-
-
 
     let audio = document.getElementById('audio_hover');
     audio.volume = 0.4;
@@ -84,12 +99,8 @@ window.onload = function() {
       scoreScreen.innerHTML = `You survived for ${elapsed} seconds.`;
     }
 
-    // timeout = setTimeout(() => {
     gameOver.style.display = 'block';
     scoreScreen.style.display = 'block';
-    //   restartReady = true;
-    // }, 1000);
-
     audio.volume = 0.4;
     gameOver.addEventListener('mouseover', function(evt) {
       audio.play();
@@ -105,19 +116,6 @@ window.onload = function() {
       monsterSprites.intro.currentFrame = 0;
       restartGame();
     });
-
-    // let restart = document.onkeydown = function (event2) {
-    //   if (event2.keyCode === 13) {
-    //     clearTimeout(timeout);
-    //     gameOver.style.display = 'none';
-    //     monsterSprites.dead.currentFrame = 0;
-    //     monsterSprites.idle.currentFrame = 0;
-    //     player.currentSprite.currentFrame = 0;
-    //     monsterSprites.intro.currentFrame = 0;
-    //     restartGame();
-    //   }
-
-
   }
 
   function restartGame () {
@@ -138,7 +136,6 @@ window.onload = function() {
     player = new Player(ctx, canvas.width, canvas.height,
       playerSprites.aliveRight);
     monsterBullets = monster.bullets;
-
   }
 
   let monster = new Monster(ctx, canvas.width, canvas.height,
@@ -201,6 +198,7 @@ window.onload = function() {
         }
       );
     }
+
     let grunt = document.getElementById('grunt');
     monsterBullets.forEach(bullet => {
       bulletX = bullet.coordinates[0];
@@ -321,9 +319,6 @@ window.onload = function() {
     if (!monster.alive || !player.alive) {
       let gameOver = document.getElementById('game_over');
       if (key === 13) {
-        // clearTimeout(timeout);
-        // timeout = 0;
-        // restartReady = false;
         gameOver.style.display = 'none';
         monsterSprites.dead.currentFrame = 0;
         monsterSprites.idle.currentFrame = 0;
@@ -355,9 +350,7 @@ window.onload = function() {
     }
   }
 
-  // let delta;
   function main() {
-
     let now = Date.now();
     let delta = now - lastTime;
     let dt = (delta) / 500.0;
