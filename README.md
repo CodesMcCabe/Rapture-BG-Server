@@ -1,3 +1,11 @@
+Dependencies
+* `http-server`
+
+Instructions
+* `npm i`
+* `watchify main.js -o bundle.js --debug -v`
+* `http-server`
+
 Rapture-BG
 ==========
 

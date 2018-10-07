@@ -9,12 +9,44 @@ let Player = require('./lib/classes/player.js');
 let Weapons = require('./lib/classes/weapons.js');
 let Bullet = require('./lib/classes/bullet.js');
 let preloadImages = require('./resources.js');
+let Web3 = require('web3');
+let NomadAbi = require('./lib/Nomad.json');
+let NomadAssetAbi = require('./lib/NomadAsset.json');
+const WORLD_ID = 1;
 
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
   let myReq;
+  let WorldItems = false;
+  let UserItems = false;
+  let userAddress;
+  let userItemId;
   preloadAssets();
+  var web3 = window.web3;
+  // let web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/a40a265b039d483c99260493e718f673'));
+
+  web3.eth.getAccounts(function (err, acc) {
+      userAddress = acc[0];
+      web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/a40a265b039d483c99260493e718f673'));
+      var NomadContract = new web3.eth.Contract(NomadAbi.abi)
+      NomadContract.options.address = '0xeeba5b5fe49d03293e6c5b6d2a6c822785aef8f8';
+      var NomadAssetContract = new web3.eth.Contract(NomadAssetAbi.abi)
+      NomadAssetContract.options.address = '0x5b6e41062ef13c0aa569117b44b79693bee51fa7';
+      NomadAssetContract.methods.addressToItemIds(userAddress, 0).call().then(itemId => {
+          if(itemId > 0) {
+              NomadAssetContract.methods.ownerOf(itemId).call().then(ownerAddress => {
+                  console.log(ownerAddress)
+                  console.log(userAddress)
+                  if(ownerAddress.toLowerCase() === userAddress.toLowerCase()) {
+                      console.log('yes')
+                      userItemId = itemId;
+                      UserItems = true;
+                  }
+              });
+          }
+      });
+  });
 
   let sounds = document.getElementsByTagName('audio');
   let audioMute = document.getElementById('audio');
@@ -248,8 +280,9 @@ window.onload = function() {
   }
 
   function shoot (playerPos) {
+      let shootSprite = UserItems ? bulletSprites.nomad : bulletSprites.rifle;
       bullets.push(new Bullet(playerPos, canvas.width,
-        canvas.height, ctx, bulletSprites.rifle));
+        canvas.height, ctx, shootSprite, undefined, UserItems));
 
       bullets = bullets.filter(bullet => bullet.active);
 
