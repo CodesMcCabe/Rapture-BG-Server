@@ -8,6 +8,7 @@ let BloodHit = require('./lib/classes/blood_hit.js');
 let Player = require('./lib/classes/player.js');
 let Weapons = require('./lib/classes/weapons.js');
 let Bullet = require('./lib/classes/bullet.js');
+let GameLevels = require('./lib/options/game_levels.js');
 let preloadImages = require('./resources.js');
 let Web3 = require('web3');
 let NomadAbi = require('./lib/Nomad.json');
@@ -17,6 +18,7 @@ const WORLD_ID = 1;
 window.onload = function() {
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
+  let difficultyLevel = 0;
   let myReq;
   let WorldItems = false;
   let UserItems = false;
@@ -74,6 +76,8 @@ window.onload = function() {
     let music = document.getElementById('music');
     let introMusic = document.getElementById('cave_theme');
     let healthBar = document.getElementById('healthbar');
+    healthBar.value = GameLevels[difficultyLevel].bossHp;
+    healthBar.max = GameLevels[difficultyLevel].bossHp;
     introMusic.volume = 1;
 
     start.addEventListener('click', function(e) {
@@ -151,11 +155,11 @@ window.onload = function() {
   }
 
   function restartGame () {
+    
     let music = document.getElementById('music');
     let gameOver = document.getElementById('game_over');
     let scoreScreen = document.getElementById('score_screen');
     let healthbar = document.getElementById('healthbar');
-    healthbar.value = monster.maxHP;
     music.volume = .7;
     music.play();
     gameTimerStop = false;
@@ -164,14 +168,16 @@ window.onload = function() {
     scoreScreen.style.display = 'none';
     gameOver.style.display = "none";
     monster = new Monster(ctx, canvas.width, canvas.height,
-      monsterSprites.intro);
+      monsterSprites.intro, GameLevels[difficultyLevel]);
     player = new Player(ctx, canvas.width, canvas.height,
       playerSprites.aliveRight);
     monsterBullets = monster.bullets;
+    healthbar.max = monster.maxHP;
+    healthbar.value = monster.health;
   }
 
   let monster = new Monster(ctx, canvas.width, canvas.height,
-    monsterSprites.intro);
+    monsterSprites.intro, GameLevels[difficultyLevel]);
   let gameStart = false;
   let bullets = [];
   let monsterBullets = monster.bullets;
